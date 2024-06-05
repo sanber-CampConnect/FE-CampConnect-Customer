@@ -5,6 +5,7 @@ import Logo from "../../assets/logo.png";
 import IconEmail from "../../assets/icons/iconEmail.png";
 import IconLock from "../../assets/icons/iconLock.png";
 import ImgPlaceholder from "../../assets/placeholder.png";
+import { Link } from 'react-router-dom';
 
 const Login = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -36,19 +37,20 @@ const Login = () => {
                     />
                 </div>
                 <div className="font-poppins text-left mt-6 xl:-ml-10">
+                <h1 className="text-xl font-semibold hidden xl:block">
+                        Sign in 
+                    </h1>
                     <h1 className="text-xl font-semibold xl:hidden block">
                         Sign in to
                     </h1>
-                    <p className="font-medium text-base font-poppins">
+                    <p className="font-medium text-base font-poppins xl:hidden">
                         Lorem ipsum is simply
                     </p>
                     <p className="font-medium text-base mt-3 hidden xl:block">
                         If you don’t have an account register
                         <br />
                         You can{" "}
-                        <a href="#" className="text-red-600">
-                            Register here!
-                        </a>
+                        <Link to="/auth/register" className="text-red-600">Register here!</Link>
                     </p>
                 </div>
                 <form className="space-y-6 pt-12 xl:-ml-10">
@@ -144,9 +146,7 @@ const Login = () => {
                                 If you don’t have an account register
                                 <br />
                                 You can{" "}
-                                <a href="#" className="text-indigo-600">
-                                    Register here!
-                                </a>
+                                <Link to="/auth/register" className="text-red-600">Register here!</Link>
                             </p>
                         </div>
                     </div>

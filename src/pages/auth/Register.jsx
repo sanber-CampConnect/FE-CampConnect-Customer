@@ -5,6 +5,8 @@ import Logo from "../../assets/logo.png";
 import IconEmail from "../../assets/icons/iconEmail.png";
 import IconLock from "../../assets/icons/iconLock.png";
 import ImgPlaceholder from "../../assets/placeholder.png";
+import { FaRegUser } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 
 const Register = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -42,13 +44,14 @@ const Register = () => {
                 </div>
                 <div className="font-poppins text-left mt-6 xl:-ml-10">
                     <h1 className="text-xl font-semibold">Register</h1>
-                    <p className="font-medium text-base mt-3">
+                    <p className="font-medium text-base font-poppins xl:hidden">
+                        Lorem ipsum is simply
+                    </p>
+                    <p className="font-medium text-base mt-3 hidden xl:block">
                         If you already have an account
                         <br />
                         You can{" "}
-                        <a href="#" className="text-red-600">
-                            Login here!
-                        </a>
+                        <Link to="/auth/login" className="text-red-600">Login here!</Link>
                     </p>
                 </div>
                 <form className="space-y-6 pt-12 xl:-ml-10">
@@ -82,14 +85,17 @@ const Register = () => {
                         >
                             Username
                         </label>
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            required
-                            className="w-full pl-3 pr-3 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
-                            placeholder="Enter your username"
-                        />
+                        <div className="flex items-center mt-1">
+                            <FaRegUser className="absolute left-3 w-4 h-4 text-black" />
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                required
+                                className="w-full pl-10 pr-3 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
+                                placeholder="Enter your username"
+                            />
+                        </div>
                     </div>
                     <div className="relative">
                         <label
@@ -98,14 +104,17 @@ const Register = () => {
                         >
                             Phone
                         </label>
-                        <input
-                            type="tel"
-                            id="phone"
-                            name="phone"
-                            required
-                            className="w-full pl-3 pr-3 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
-                            placeholder="Enter your phone number"
-                        />
+                        <div className="flex items-center mt-1">
+                            <FaRegUser className="absolute left-3 w-4 h-4 text-black" />
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                required
+                                className="w-full pl-10 pr-3 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
+                                placeholder="Enter your phone number"
+                            />
+                        </div>
                     </div>
                     <div className="relative">
                         <label
@@ -182,6 +191,14 @@ const Register = () => {
                         >
                             Register
                         </button>
+                        <div className="font-poppins text-left mt-6 ml-5 xl:hidden">
+                            <p className="font-normal text-sm mt-3">
+                                If you already have an account register
+                                <br />
+                                You can{" "}
+                                <Link to="/auth/login" className="text-red-600">Login here!</Link>
+                            </p>
+                        </div>
                     </div>
                 </form>
             </div>
