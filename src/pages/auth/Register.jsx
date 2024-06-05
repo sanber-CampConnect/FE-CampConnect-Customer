@@ -40,7 +40,7 @@ const Register = () => {
                         className="w-20 pt-3 mx-auto xl:mx-0 xl:hidden"
                     />
                 </div>
-                <div className="font-poppins text-left mt-6 -ml-10">
+                <div className="font-poppins text-left mt-6 xl:-ml-10">
                     <h1 className="text-xl font-semibold">Register</h1>
                     <p className="font-medium text-base mt-3">
                         If you already have an account
@@ -51,7 +51,7 @@ const Register = () => {
                         </a>
                     </p>
                 </div>
-                <form className="space-y-6 pt-12 -ml-10">
+                <form className="space-y-6 pt-12 xl:-ml-10">
                     <div className="relative">
                         <label
                             htmlFor="email"
