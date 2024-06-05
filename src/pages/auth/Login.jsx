@@ -126,12 +126,12 @@ const Login = () => {
                             </label>
                         </div>
                         <div className="flex items-start">
-                            <a
-                                href="#"
+                            <Link
+                                to="/auth/forgot-pass"
                                 className="text-sm text-gray-600 hover:underline hover:text-indigo-600"
                             >
                                 Forgot <br /> Password?
-                            </a>
+                            </Link>
                         </div>
                     </div>
                     <div className="mt-4">
