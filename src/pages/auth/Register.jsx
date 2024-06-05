@@ -33,7 +33,7 @@ const Register = () => {
                 </div>
             </div>
             <div className="w-full max-w-xl mx-auto p-8 xl:w-1/2">
-                <div className="text-center xl:text-left">
+                <div className="text-center -ml-60  xl:text-left">
                     <img
                         src={Logo}
                         alt="logo"
