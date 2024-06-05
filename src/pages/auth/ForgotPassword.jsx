@@ -16,7 +16,7 @@ const ForgotPassword = () => {
                         className="w-20 pt-3- mx-auto xl:mx-0 xl:hidden"
                     />
                 </div>
-                <div className="font-poppins text-left mt-20 ">
+                <div className="font-poppins text-left mt-6 ">
                     <h1 className="text-xl font-semibold xl:hidden block">
                         Forgot Password
                     </h1>
