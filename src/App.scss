@@ -3,3 +3,19 @@
 * {
   font-family: "DM Sans", sans-serif;
 }
+
+.swal2-confirm {
+  background-color: #064f3b !important;
+  color: #fff !important;
+}
+
+.swal2-cancel {
+  background-color: #fff !important;
+  color: #064f3b !important;
+  border: 1px solid #064f3b !important;
+}
+
+.swal2-actions {
+  display: flex;
+  justify-content: space-between !important;
+}

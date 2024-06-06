@@ -1,6 +1,9 @@
-const PrimaryButton = ({ text }) => {
+const PrimaryButton = ({ text, className, type }) => {
   return (
-    <button className="bg-primary text-white rounded-lg px-4 py-2 mr-2">
+    <button
+      type={type}
+      className={`bg-primary text-[#ffff] !important rounded-lg px-4 py-2 mr-2 ${className}`}
+    >
       {text}
     </button>
   );

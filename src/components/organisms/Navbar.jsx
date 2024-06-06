@@ -1,5 +1,5 @@
 import Logo from "../../assets/images/logo.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { OutlineButton } from "../atoms/Buttons";
 
 const Navbar = () => {
@@ -16,17 +16,21 @@ const Navbar = () => {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+    console.log(isMenuOpen);
   };
 
-  window.addEventListener("scroll", changeScrolled);
+  useEffect(() => {
+    window.addEventListener("scroll", changeScrolled);
+    return () => {
+      window.removeEventListener("scroll", changeScrolled);
+    };
+  }, []);
 
   return (
     <>
       <nav
         className={`${
-          isScrolled || isMenuOpen
-            ? "bg-opacity-60 shadow-lg backdrop-blur-lg"
-            : ""
+          isScrolled || isMenuOpen ? "bg-opacity-60 backdrop-blur-lg" : ""
         } z-[100] fixed top-0 left-0 w-screen bg-white duration-300 transition-all`}
       >
         <div className="max-w-screen-xl flex items-center justify-between mx-auto py-4 px-6">
@@ -76,7 +80,7 @@ const Navbar = () => {
             <ul className="flex flex-row space-x-8 font-medium rtl:space-x-reverse">
               <li>
                 <a
-                  href="#"
+                  href="/home"
                   className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
                   aria-current="page"
                 >
@@ -85,7 +89,7 @@ const Navbar = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/catalogue"
                   className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
                 >
                   Katalog
@@ -93,7 +97,7 @@ const Navbar = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/cart"
                   className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
                 >
                   Keranjang
@@ -101,7 +105,7 @@ const Navbar = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/order"
                   className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
                 >
                   Order
@@ -109,7 +113,7 @@ const Navbar = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/info"
                   className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
                 >
                   Informasi
@@ -117,7 +121,7 @@ const Navbar = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/profile"
                   className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
                 >
                   Profil
@@ -132,11 +136,11 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="flex flex-col items-start w-full md:hidden bg-white p-4">
+          <div className="flex flex-col items-start w-full md:hidden p-4">
             <ul className="flex flex-col space-y-4 font-medium">
               <li>
                 <a
-                  href="#"
+                  href="/home"
                   className="block p-2 text-primary rounded hover:text-secondary"
                   aria-current="page"
                 >
@@ -145,7 +149,7 @@ const Navbar = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/catalogue"
                   className="block p-2 text-primary rounded hover:text-secondary"
                 >
                   Katalog
@@ -153,7 +157,7 @@ const Navbar = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/cart"
                   className="block p-2 text-primary rounded hover:text-secondary"
                 >
                   Keranjang
@@ -161,7 +165,7 @@ const Navbar = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/order"
                   className="block p-2 text-primary rounded hover:text-secondary"
                 >
                   Order
@@ -169,7 +173,7 @@ const Navbar = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/info"
                   className="block p-2 text-primary rounded hover:text-secondary"
                 >
                   Informasi
@@ -177,7 +181,7 @@ const Navbar = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/profile"
                   className="block p-2 text-primary rounded hover:text-secondary"
                 >
                   Profil

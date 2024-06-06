@@ -11,6 +11,7 @@ export default {
       primary: "#064F3B",
       secondary: "#FE8F25",
       neutral: "#7F7F7F",
+      white: "#FFFFFF",
     },
     fontSize: {
       s: [

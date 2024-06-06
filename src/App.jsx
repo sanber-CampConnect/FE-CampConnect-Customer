@@ -30,14 +30,14 @@ function App() {
               </HomeLayout>
             }
           />
-          <Route
+          {/* <Route
             path="/edit-profile"
             element={
               <HomeLayout>
                 <EditProfile />
               </HomeLayout>
             }
-          />
+          /> */}
         </Routes>
       </BrowserRouter>
     </>
