@@ -12,6 +12,7 @@ const ChangePassword = () => {
     confirm_password: "",
   });
 
+  const [oldPasswordVisible, setOldPasswordVisible] = useState(false);
   const [newPasswordVisible, setNewPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
@@ -21,6 +22,10 @@ const ChangePassword = () => {
 
   const toggleConfirmPasswordVisibility = () => {
     setConfirmPasswordVisible(!confirmPasswordVisible);
+  };
+
+  const toggleOldPasswordVisibility = () => {
+    setOldPasswordVisible(!confirmPasswordVisible);
   };
 
   const handleChange = (e) => {
@@ -54,7 +59,7 @@ const ChangePassword = () => {
                 className="absolute left-3 w-4 h-4 text-black"
               />
               <input
-                type={newPasswordVisible ? "text" : "password"}
+                type={oldPasswordVisible ? "text" : "password"}
                 id="old_password"
                 name="old_password"
                 onChange={handleChange}
@@ -64,9 +69,9 @@ const ChangePassword = () => {
               />
               <div
                 className="absolute right-3 cursor-pointer"
-                onClick={toggleNewPasswordVisibility}
+                onClick={toggleOldPasswordVisibility}
               >
-                {newPasswordVisible ? (
+                {oldPasswordVisible ? (
                   <FaEyeSlash className="w-5 h-5 text-black" />
                 ) : (
                   <IoEyeSharp className="w-5 h-5 text-black" />

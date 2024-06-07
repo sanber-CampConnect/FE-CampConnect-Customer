@@ -9,6 +9,7 @@ import UpdatePassword from "./pages/auth/UpdatePassword.jsx";
 import SuccessPass from "./pages/auth/SuccessPass.jsx";
 import HomeLayout from "./layouts/HomeLayout.jsx";
 import EditProfile from "./pages/profile/ChangeProfile.jsx";
+import Home from "./pages/home/Home.jsx";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 function App() {
@@ -27,6 +28,14 @@ function App() {
             element={
               <HomeLayout>
                 <Profile />
+              </HomeLayout>
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <HomeLayout>
+                <Home />
               </HomeLayout>
             }
           />

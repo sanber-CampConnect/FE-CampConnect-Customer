@@ -2,13 +2,26 @@ import { useState } from "react";
 import { IoEyeSharp } from "react-icons/io5";
 import { FaEyeSlash } from "react-icons/fa";
 import Logo from "../../assets/images/logo.png";
-import IconEmail from "../../assets/icons/iconEmail.png";
-import IconLock from "../../assets/icons/iconLock.png";
+import { iconEmail, iconLock } from "../../assets/icons";
 import ImgPlaceholder from "../../assets/placeholder.png";
 import { FaRegUser } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import { authRegister } from "../../services/api";
+import { notification } from "antd";
 
 const Register = () => {
+  const [formData, setFormData] = useState({
+    email: "",
+    name: "",
+    password: "",
+    confirm_password: "",
+  });
+  const [error, setError] = useState(null);
+  const [passwordMatchError, setPasswordMatchError] = useState(null);
+  const { dispatch } = useAuthContext();
+  const navigate = useNavigate();
+
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
@@ -18,6 +31,67 @@ const Register = () => {
 
   const toggleConfirmPasswordVisibility = () => {
     setConfirmPasswordVisible(!confirmPasswordVisible);
+  };
+
+  const handleChange = (e) => {
+    const { id, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [id]: type === "checkbox" ? checked : value,
+    });
+    if (id === "password" || id === "confirm_password") {
+      if (id === "password") {
+        if (value !== formData.confirm_password) {
+          setPasswordMatchError("Password dan Konfirmasi Password harus sama");
+        } else {
+          setPasswordMatchError(null);
+        }
+      } else {
+        if (value !== formData.password) {
+          setPasswordMatchError("Password dan Konfirmasi Password harus sama");
+        } else {
+          setPasswordMatchError(null);
+        }
+      }
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (formData.password !== formData.confirm_password) {
+      notification.error({
+        message: "Password Tidak Cocok",
+        description: "Password dan konfirmasi password tidak sama",
+        placement: "topRight",
+      });
+      return;
+    }
+
+    const dataToSubmit = {
+      email: formData.email,
+      name: formData.name,
+      password: formData.password,
+    };
+
+    console.log("Received values of form: ", dataToSubmit);
+    authRegister(dataToSubmit)
+      .then((res) => {
+        if (res.status === 200) {
+          notification.success({
+            message: "Registrasi Berhasil",
+            description: "Akun Anda berhasil dibuat, silakan login",
+          });
+          navigate("/auth/login");
+        }
+      })
+      .catch((err) => {
+        notification.error({
+          message: "Registrasi Gagal!",
+          description:
+            err.response?.data?.message || "Terjadi kesalahan saat registrasi",
+          placement: "topRight",
+        });
+      });
   };
 
   return (
@@ -56,7 +130,7 @@ const Register = () => {
             </Link>
           </p>
         </div>
-        <form className="space-y-6 pt-12 xl:-ml-10">
+        <form className="space-y-6 pt-12 xl:-ml-10" onSubmit={handleSubmit}>
           <div className="relative">
             <label
               htmlFor="email"
@@ -66,7 +140,7 @@ const Register = () => {
             </label>
             <div className="flex items-center mt-1">
               <img
-                src={IconEmail}
+                src={iconEmail}
                 alt="email icon"
                 className="absolute left-3 w-4 h-4 text-black"
               />
@@ -74,6 +148,8 @@ const Register = () => {
                 type="email"
                 id="email"
                 name="email"
+                value={formData.email}
+                onChange={handleChange}
                 required
                 className="w-full pl-10 pr-3 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
                 placeholder="Enter your email address"
@@ -82,7 +158,7 @@ const Register = () => {
           </div>
           <div className="relative">
             <label
-              htmlFor="username"
+              htmlFor="name"
               className="block text-sm font-medium text-black"
             >
               Username
@@ -91,30 +167,13 @@ const Register = () => {
               <FaRegUser className="absolute left-3 w-4 h-4 text-black" />
               <input
                 type="text"
-                id="username"
-                name="username"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
                 required
                 className="w-full pl-10 pr-3 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
                 placeholder="Enter your username"
-              />
-            </div>
-          </div>
-          <div className="relative">
-            <label
-              htmlFor="phone"
-              className="block text-sm font-medium text-black"
-            >
-              Phone
-            </label>
-            <div className="flex items-center mt-1">
-              <FaRegUser className="absolute left-3 w-4 h-4 text-black" />
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                required
-                className="w-full pl-10 pr-3 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
-                placeholder="Enter your phone number"
               />
             </div>
           </div>
@@ -127,7 +186,7 @@ const Register = () => {
             </label>
             <div className="flex items-center mt-1 relative">
               <img
-                src={IconLock}
+                src={iconLock}
                 alt="lock icon"
                 className="absolute left-3 w-4 h-4 text-black"
               />
@@ -135,6 +194,8 @@ const Register = () => {
                 type={passwordVisible ? "text" : "password"}
                 id="password"
                 name="password"
+                value={formData.password}
+                onChange={handleChange}
                 required
                 className="w-full pl-10 pr-10 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
                 placeholder="Enter your password"
@@ -150,6 +211,9 @@ const Register = () => {
                 )}
               </div>
             </div>
+            {passwordMatchError && (
+              <p className="text-red-600 text-sm mt-1">{passwordMatchError}</p>
+            )}
           </div>
           <div className="relative">
             <label
@@ -160,7 +224,7 @@ const Register = () => {
             </label>
             <div className="flex items-center mt-1 relative">
               <img
-                src={IconLock}
+                src={iconLock}
                 alt="lock icon"
                 className="absolute left-3 w-4 h-4 text-black"
               />
@@ -168,6 +232,8 @@ const Register = () => {
                 type={confirmPasswordVisible ? "text" : "password"}
                 id="confirm_password"
                 name="confirm_password"
+                value={formData.confirm_password}
+                onChange={handleChange}
                 required
                 className="w-full pl-10 pr-10 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
                 placeholder="Confirm your password"
@@ -183,25 +249,24 @@ const Register = () => {
                 )}
               </div>
             </div>
+            {passwordMatchError && (
+              <p className="text-red-600 text-sm mt-1">{passwordMatchError}</p>
+            )}
           </div>
           <div className="mt-4">
             <button
               type="submit"
-              className="w-full px-4 py-3 text-white bg-primary rounded-3xl hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 font-medium font-poppins"
+              className="w-full px-4 py-3 text-white bg-primary rounded-none focus:outline-none focus:bg-primary-dark"
             >
               Register
             </button>
-            <div className="font-poppins text-left mt-6 ml-5 xl:hidden">
-              <p className="font-normal text-sm mt-3">
-                If you already have an account register
-                <br />
-                You can{" "}
-                <Link to="/auth/login" className="text-red-600">
-                  Login here!
-                </Link>
-              </p>
-            </div>
           </div>
+          <p className="mt-4 text-center text-sm text-black">
+            If you already have an account{" "}
+            <Link to="/auth/login" className="text-red-600">
+              Login here!
+            </Link>
+          </p>
         </form>
       </div>
     </div>

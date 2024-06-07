@@ -5,11 +5,53 @@ import Logo from "../../assets/images/logo.png";
 import IconEmail from "../../assets/icons/iconEmail.png";
 import IconLock from "../../assets/icons/iconLock.png";
 import ImgPlaceholder from "../../assets/placeholder.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import { authLogin } from "../../services/api";
+import { notification } from "antd";
 
 const Login = () => {
-  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState(null);
+  const { dispatch } = useAuthContext();
+  const navigate = useNavigate();
 
+  const handleChange = (e) => {
+    const { id, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [id]: type === "checkbox" ? checked : value,
+    });
+  };
+
+  //masih salah
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Received values of form: ", formData);
+    authLogin(formData)
+      .then((res) => {
+        if (res.status === 200) {
+          notification.success({
+            message: "Login Berhasil",
+            description: "Kamu berhasil masuk ke dashboard",
+          });
+          navigate("/");
+        }
+      })
+      .catch((err) => {
+        notification.error({
+          message: "Login Gagal!",
+          description:
+            err.response?.data?.message || "Terjadi kesalahan saat login",
+          placement: "topRight",
+        });
+      });
+  };
+
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
@@ -45,13 +87,13 @@ const Login = () => {
           <p className="font-medium text-base mt-3 hidden xl:block">
             If you don’t have an account register
             <br />
-            You can{" "}
+            You can
             <Link to="/auth/register" className="text-red-600">
               Register here!
             </Link>
           </p>
         </div>
-        <form className="space-y-6 pt-12 xl:-ml-10">
+        <form className="space-y-6 pt-12 xl:-ml-10" onSubmit={handleSubmit}>
           <div className="relative">
             <label
               htmlFor="email"
@@ -69,6 +111,8 @@ const Login = () => {
                 type="email"
                 id="email"
                 name="email"
+                value={formData.email}
+                onChange={handleChange}
                 required
                 className="w-full pl-10 pr-3 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
                 placeholder="Enter your email address"
@@ -92,6 +136,8 @@ const Login = () => {
                 type={passwordVisible ? "text" : "password"}
                 id="password"
                 name="password"
+                onChange={handleChange}
+                value={formData.password}
                 required
                 className="w-full pl-10 pr-10 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
                 placeholder="Enter your password"
@@ -114,6 +160,7 @@ const Login = () => {
                 type="checkbox"
                 id="remember_me"
                 name="remember_me"
+                onChange={handleChange}
                 className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
               />
               <label
@@ -143,7 +190,7 @@ const Login = () => {
               <p className="font-normal text-sm mt-3">
                 If you don’t have an account register
                 <br />
-                You can{" "}
+                You can
                 <Link to="/auth/register" className="text-red-600">
                   Register here!
                 </Link>

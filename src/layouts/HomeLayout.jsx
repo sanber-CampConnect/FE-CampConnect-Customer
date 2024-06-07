@@ -12,7 +12,7 @@ const HomeLayout = ({ children }) => {
       <div
         className="content"
         style={{
-          marginLeft: "20px",
+          marginLeft: "48px",
           marginRight: "20px",
           marginTop: "90px",
           minHeight: "100vh",

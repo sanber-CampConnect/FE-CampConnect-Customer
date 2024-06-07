@@ -1,8 +1,10 @@
 import Logo from "../../assets/images/logo.png";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { OutlineButton } from "../atoms/Buttons";
+import { AuthContext } from "../../context/AuthContext";
 
 const Navbar = () => {
+  const { user } = useContext(AuthContext);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -119,18 +121,24 @@ const Navbar = () => {
                   Informasi
                 </a>
               </li>
-              <li>
-                <a
-                  href="/profile"
-                  className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
-                >
-                  Profil
-                </a>
-              </li>
+              {user && (
+                <li>
+                  <a
+                    href="/profile"
+                    className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
+                  >
+                    Profil
+                  </a>
+                </li>
+              )}
             </ul>
-            <div className="button-login">
-              <OutlineButton text="Login" />
-            </div>
+            {!user && (
+              <div className="button-login">
+                <a href="/auth/login">
+                  <OutlineButton text="Login" />
+                </a>
+              </div>
+            )}
           </div>
         </div>
 
@@ -179,18 +187,24 @@ const Navbar = () => {
                   Informasi
                 </a>
               </li>
-              <li>
-                <a
-                  href="/profile"
-                  className="block p-2 text-primary rounded hover:text-secondary"
-                >
-                  Profil
-                </a>
-              </li>
+              {user && (
+                <li>
+                  <a
+                    href="/profile"
+                    className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
+                  >
+                    Profil
+                  </a>
+                </li>
+              )}
             </ul>
-            <div className="button-login mt-8 w-full">
-              <OutlineButton text="Login" className="w-full text-center" />
-            </div>
+            {!user && (
+              <div className="button-login">
+                <a href="/auth/login">
+                  <OutlineButton text="Login" />
+                </a>
+              </div>
+            )}
           </div>
         )}
       </nav>
