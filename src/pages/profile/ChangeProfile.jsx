@@ -14,17 +14,10 @@ const ChangeProfile = (props) => {
   useEffect(() => {
     if (section === "edit" && childData) {
       setFormData({
-        username: childData.username || "",
+        username: childData.name || "",
         full_name: childData.full_name || "",
         email: childData.email || "",
         phone: childData.phone || "",
-      });
-    } else {
-      setFormData({
-        username: "",
-        full_name: "",
-        email: "",
-        phone: "",
       });
     }
   }, [section, childData]);

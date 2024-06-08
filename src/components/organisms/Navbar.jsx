@@ -1,10 +1,10 @@
 import Logo from "../../assets/images/logo.png";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { OutlineButton } from "../atoms/Buttons";
-import { AuthContext } from "../../context/AuthContext";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const Navbar = () => {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuthContext();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -18,7 +18,6 @@ const Navbar = () => {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-    console.log(isMenuOpen);
   };
 
   useEffect(() => {
@@ -39,7 +38,7 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex items-center space-x-3 rtl:space-x-reverse">
             <a
-              href="https://flowbite.com/"
+              href="/"
               className="flex items-center space-x-3 rtl:space-x-reverse"
             >
               <img

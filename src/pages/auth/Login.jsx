@@ -6,7 +6,6 @@ import IconEmail from "../../assets/icons/iconEmail.png";
 import IconLock from "../../assets/icons/iconLock.png";
 import ImgPlaceholder from "../../assets/placeholder.png";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../hooks/useAuthContext";
 import { authLogin } from "../../services/api";
 import { notification } from "antd";
 
@@ -15,8 +14,6 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const [error, setError] = useState(null);
-  const { dispatch } = useAuthContext();
   const navigate = useNavigate();
 
   const handleChange = (e) => {

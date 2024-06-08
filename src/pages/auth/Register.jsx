@@ -6,7 +6,6 @@ import { iconEmail, iconLock } from "../../assets/icons";
 import ImgPlaceholder from "../../assets/placeholder.png";
 import { FaRegUser } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../hooks/useAuthContext";
 import { authRegister } from "../../services/api";
 import { notification } from "antd";
 
@@ -17,9 +16,7 @@ const Register = () => {
     password: "",
     confirm_password: "",
   });
-  const [error, setError] = useState(null);
   const [passwordMatchError, setPasswordMatchError] = useState(null);
-  const { dispatch } = useAuthContext();
   const navigate = useNavigate();
 
   const [passwordVisible, setPasswordVisible] = useState(false);

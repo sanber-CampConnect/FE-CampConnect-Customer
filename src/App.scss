@@ -19,3 +19,10 @@
   display: flex;
   justify-content: space-between !important;
 }
+
+// Page404.scss
+.custom-result .ant-result-icon {
+  svg {
+    fill: #064f3b;
+  }
+}

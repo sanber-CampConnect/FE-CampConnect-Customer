@@ -1,11 +1,13 @@
 import axios from "axios";
 
-export const get = (url) => {
-  return axios.get(url);
+const axiosInstance = axios.create();
+
+export const get = (url, config) => {
+  return axiosInstance.get(url, config);
 };
 
-export const post = (url, data) => {
-  return axios.post(url, data);
+export const post = (url, data, config) => {
+  return axiosInstance.post(url, data, config);
 };
 
 export const put = (url, data) => {
@@ -16,6 +18,6 @@ export const patch = (url, data) => {
   return axios.patch(url, data);
 };
 
-export const delete_request = (url) => {
-  return axios.delete(url);
+export const delete_request = (url, config) => {
+  return axiosInstance.delete(url, config);
 };

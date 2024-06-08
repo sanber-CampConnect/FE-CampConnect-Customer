@@ -27,3 +27,50 @@ export const authRegister = async (params) => {
     throw error;
   }
 };
+
+export const logOut = () => {
+  localStorage.removeItem("token");
+};
+
+export const deleteAccount = async (params) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+  const url = `${API_URL}/users/${params}`;
+  return await delete_request(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+/* =================================================== PROFILE ========================================================== */
+export const getProfile = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+  const url = `${API_URL}/profile`;
+  return await get(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const requestEmailVerification = async (email) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+  const url = `${API_URL}/auth/requestVerification`;
+  const data = new URLSearchParams();
+  data.append("email", email);
+  return await post(url, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
+};

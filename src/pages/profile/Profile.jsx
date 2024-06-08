@@ -2,20 +2,28 @@ import { useState, useEffect } from "react";
 import PhotoProfile from "../../assets/images/photo-profile.svg";
 import ChangeProfile from "./ChangeProfile";
 import ChangePassword from "./ChangePassword";
-import { OutlineButton } from "../../components/atoms/Buttons";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
+import {
+  getProfile,
+  logOut,
+  deleteAccount,
+  requestEmailVerification,
+} from "../../services/api";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const Profile = () => {
   const [section, setSection] = useState("default");
   const [childData, setChildData] = useState({});
-  const [data, setData] = useState({
-    username: "alexrawles",
-    full_name: "Alex Rawles",
-    email: "alexarawles@gmail.com",
-    photo_profile: PhotoProfile,
-    phone: "081234567890",
-  });
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { dispatch } = useAuthContext();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    getDataProfile();
+  }, []);
 
   useEffect(() => {
     if (section === "default") {
@@ -23,13 +31,20 @@ const Profile = () => {
     }
   }, [section]);
 
-  const editData = (record) => {
-    setChildData(record);
-    setSection("edit");
-  };
-
-  const changePass = () => {
-    setSection("change_pass");
+  const getDataProfile = () => {
+    setLoading(true);
+    getProfile()
+      .then((res) => {
+        console.log(res.data.data);
+        setData(res.data.data[0]);
+      })
+      .catch((err) => {
+        console.error(err);
+        throw new Error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const handleLogout = () => {
@@ -47,12 +62,15 @@ const Profile = () => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
+        logOut();
+        dispatch({ type: "LOGOUT" });
         Swal.fire({
           title: "Berhasil",
           text: "Anda telah berhasil keluar dari akun Anda.",
           icon: "success",
+        }).then(() => {
+          navigate("/");
         });
-        // Logika untuk logout bisa ditambahkan di sini
       }
     });
   };
@@ -72,65 +90,127 @@ const Profile = () => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Dihapus",
-          text: "Akun Anda telah berhasil dihapus.",
-          icon: "success",
-        });
-        // Logika untuk menghapus akun bisa ditambahkan di sini
+        deleteAccount(data.id)
+          .then(() => {
+            logOut();
+            dispatch({ type: "LOGOUT" });
+            Swal.fire({
+              title: "Dihapus",
+              text: "Akun Anda telah berhasil dihapus.",
+              icon: "success",
+            }).then(() => {
+              navigate("/auth/login");
+            });
+          })
+          .catch((err) => {
+            Swal.fire({
+              title: "Error",
+              text: "Terjadi kesalahan saat menghapus akun.",
+              icon: "error",
+            });
+            console.error(err);
+          });
       }
     });
   };
 
+  const handleRequestEmailVerification = () => {
+    if (!data || !data.email) {
+      Swal.fire({
+        title: "Error",
+        text: "Email tidak ditemukan.",
+        icon: "error",
+      });
+      return;
+    }
+
+    requestEmailVerification(data.email)
+      .then(() => {
+        Swal.fire({
+          title: "Berhasil",
+          text: "Permintaan verifikasi email telah dikirim.",
+          icon: "success",
+        });
+      })
+      .catch((err) => {
+        Swal.fire({
+          title: "Gagal",
+          text: "Terjadi kesalahan saat mengirim permintaan verifikasi email.",
+          icon: "error",
+        });
+        console.error(err);
+      });
+  };
+
+  const editData = (record) => {
+    setChildData(record);
+    setSection("edit");
+  };
+
+  const changePass = () => {
+    setSection("change_pass");
+  };
+
   return (
-    <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-12">
+    <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-8">
       {/* Sidebar */}
       <div className="w-full md:w-1/3">
-        <div className="account-user flex flex-row justify-start space-x-4 mb-3 bg-[#F5F1F1] p-4 rounded-xl">
-          <img src={data.photo_profile} alt={data.username} />
-          <div className="flex flex-col justify-center space-y-2">
-            <h5 className="text-lg font-medium">{data.full_name}</h5>
-            <p className="text-neutral text-base font-thin">{data.email}</p>
+        {data && (
+          <div className="account-user flex flex-row justify-start space-x-4 mb-3 bg-[#F5F1F1] p-4 rounded-xl">
+            <img src={data.photo_profile || PhotoProfile} alt={data.name} />
+            <div className="flex flex-col justify-center space-y-2">
+              <h5 className="text-lg font-medium">{data.name}</h5>
+              <p className="text-neutral text-base font-thin">{data.email}</p>
+            </div>
           </div>
-        </div>
+        )}
+
         <div className="my-4 xl:my-8 rounded-xl bg-[#F5F1F1]">
           <ul className="space-y-6 p-4">
-            <li className="flex flex-row items-center space-x-2">
-              <i className="bi bi-person-fill"></i>
+            <li className="flex flex-row items-center space-x-3">
+              <div className="w-6 text-center">
+                <i className="bi bi-person-fill text-md"></i>
+              </div>
               <a
-                className="block text-black rounded md:p-0 cursor-pointer"
+                className="block text-black rounded md:p-0 cursor-pointer text-md"
                 aria-current="page"
                 onClick={() => editData(data)}
               >
                 Sunting Profil
               </a>
             </li>
-            <li className="flex flex-row items-center space-x-2">
-              <i className="bi bi-lock-fill"></i>
+            <li className="flex flex-row items-center space-x-3">
+              <div className="w-6 text-center h-auto">
+                <i className="bi bi-lock-fill text-md"></i>
+              </div>
               <a
-                className="block text-black rounded md:p-0 cursor-pointer"
+                className="block text-black rounded md:p-0 cursor-pointer text-md"
                 aria-current="page"
                 onClick={() => changePass(data)}
               >
                 Ubah Kata Sandi
               </a>
             </li>
-            <li className="flex flex-row items-center space-x-2">
-              <i className="bi bi-box-arrow-right"></i>
+            <li className="flex flex-row items-center space-x-3">
+              <div className="w-6 text-center">
+                <i className="bi bi-box-arrow-right text-md"></i>
+              </div>
               <a
                 href="#"
-                className="block text-black rounded md:p-0"
+                className="block text-black rounded md:p-0 text-md"
                 aria-current="page"
                 onClick={handleLogout}
               >
                 Keluar Akun
               </a>
             </li>
-            <li className="flex flex-row items-center space-x-2">
-              <i className="bi bi-trash3-fill"></i>
+            <li className="flex flex-row items-center space-x-3">
+              <div className="w-6 text-center">
+                <i className="bi bi-trash3-fill text-md"></i>
+              </div>
               <a
                 href="#"
-                className="block text-black rounded md:p-0"
+                className="block text-black rounded md:p-0 text-md"
                 aria-current="page"
                 onClick={handleDeleteAccount}
               >
@@ -141,9 +221,57 @@ const Profile = () => {
         </div>
       </div>
 
+      {data && section === "default" && (
+        <div className="w-full md:w-1/2 max-h-1/2 h-fit bg-[#F5F1F1] rounded-xl p-8">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col">
+              <label className="font-medium text-base mb-1">Nama Lengkap</label>
+              <h1 className="text-neutral">Talitha Dwi Arini</h1>
+            </div>
+            <div className="flex flex-col">
+              <label className="font-medium text-base mb-1">Nama Akun</label>
+              <h1 className="text-neutral">{data.name}</h1>
+            </div>
+            <div className="flex flex-col">
+              <label className="font-medium text-base mb-1">Email</label>
+              <div className="flex flex-row gap-2">
+                <h1 className="text-neutral">{data.email}</h1>
+                {data.is_verified === 0 ? (
+                  <i
+                    className="bi bi-exclamation-circle-fill text-warning"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="Anda belum melakukan verifikasi email"
+                  ></i>
+                ) : (
+                  <i
+                    className="bi bi-check-circle-fill text-success"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="Anda sudah melakukan verifikasi email"
+                  ></i>
+                )}
+              </div>
+              <button
+                onClick={handleRequestEmailVerification}
+                className="flex flex-col text-base font-semibold mt-2 text-neutral hover:text-primary underline"
+              >
+                Verifikasi Email
+              </button>
+            </div>
+            <div className="flex flex-col">
+              <label className="font-medium text-base mb-1">
+                Nomor Handphone
+              </label>
+              <h1 className="text-neutral">{data.phone || "-"}</h1>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
       {section !== "default" && (
-        <div className="w-full md:w-1/2 max-h-1/2 h-fit bg-[#F5F1F1] rounded-xl px-4 py-8">
+        <div className="w-full md:w-1/2 max-h-1/2 h-fit bg-[#F5F1F1] rounded-xl p-8">
           {section === "edit" && (
             <ChangeProfile
               childData={childData}

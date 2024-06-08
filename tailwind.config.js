@@ -12,6 +12,9 @@ export default {
       secondary: "#FE8F25",
       neutral: "#7F7F7F",
       white: "#FFFFFF",
+      success: "#22bb33",
+      failed: "#bb2124",
+      warning: "#f0ad4e",
     },
     fontSize: {
       s: [

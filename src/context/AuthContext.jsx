@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, useEffect } from "react";
 
 export const AuthContext = createContext();
 
@@ -18,7 +18,17 @@ export const AuthContextProvider = ({ children }) => {
     user: null,
   });
 
-  console.log("AuthContext state: ", state);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const userData = JSON.parse(atob(token.split(".")[1]));
+        dispatch({ type: "LOGIN", payload: userData });
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={{ ...state, dispatch }}>
