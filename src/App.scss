@@ -26,3 +26,39 @@
     fill: #064f3b;
   }
 }
+
+.ant-btn-primary {
+  background-color: #064f3b !important;
+  border-color: #064f3b !important;
+}
+
+.ant-input:focus {
+  border-color: #064f3b !important;
+  box-shadow: 0 0 0 2px rgba(6, 79, 59, 0.2) !important;
+}
+
+.ant-tabs {
+  // background-color: #064f3b !important;
+  .ant-tabs-nav-wrap {
+    .ant-tabs-nav-list {
+      .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+        color: #064f3b !important;
+      }
+      .ant-tabs-tab .ant-tabs-tab-btn {
+        &:hover {
+          color: #064f3b !important;
+        }
+      }
+      .ant-tabs-ink-bar {
+        background: #064f3b !important;
+      }
+    }
+  }
+}
+
+.search-tabs-sticky {
+  position: sticky;
+  top: 70px; // Sesuaikan ini dengan tinggi Navbar Anda
+  z-index: 10; // Pastikan lebih rendah dari z-index Navbar
+  background: white; // Opsional: untuk memastikan teks tidak terlihat melalui
+}

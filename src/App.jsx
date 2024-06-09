@@ -11,6 +11,7 @@ import HomeLayout from "./layouts/HomeLayout.jsx";
 import Page404 from "./components/organisms/Page404.jsx";
 import PageLoading from "./components/organisms/PageLoading.jsx";
 import Home from "./pages/home/Home.jsx";
+import Catalogue from "./pages/catalogue/Catalogue.jsx";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { AuthContextProvider } from "./context/AuthContext.jsx";
 import { Suspense } from "react";
@@ -42,6 +43,14 @@ function App() {
                 element={
                   <HomeLayout>
                     <Home />
+                  </HomeLayout>
+                }
+              />
+              <Route
+                path="/catalogue"
+                element={
+                  <HomeLayout>
+                    <Catalogue />
                   </HomeLayout>
                 }
               />
