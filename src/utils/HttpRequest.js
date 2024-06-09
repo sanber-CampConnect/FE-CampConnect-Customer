@@ -10,12 +10,12 @@ export const post = (url, data, config) => {
   return axiosInstance.post(url, data, config);
 };
 
-export const put = (url, data) => {
-  return axios.put(url, data);
+export const put = (url, data, config) => {
+  return axiosInstance.put(url, data, config);
 };
 
-export const patch = (url, data) => {
-  return axios.patch(url, data);
+export const patch = (url, data, config) => {
+  return axiosInstance.patch(url, data, config);
 };
 
 export const delete_request = (url, config) => {

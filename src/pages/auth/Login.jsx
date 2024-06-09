@@ -7,13 +7,14 @@ import IconLock from "../../assets/icons/iconLock.png";
 import ImgPlaceholder from "../../assets/placeholder.png";
 import { Link, useNavigate } from "react-router-dom";
 import { authLogin } from "../../services/api";
-import { notification } from "antd";
+import { notification, Spin } from "antd";
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -24,9 +25,9 @@ const Login = () => {
     });
   };
 
-  //masih salah
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     console.log("Received values of form: ", formData);
     authLogin(formData)
       .then((res) => {
@@ -45,6 +46,9 @@ const Login = () => {
             err.response?.data?.message || "Terjadi kesalahan saat login",
           placement: "topRight",
         });
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -179,9 +183,10 @@ const Login = () => {
           <div className="mt-4">
             <button
               type="submit"
-              className="w-full px-4 py-3 text-white bg-primary rounded-3xl hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 font-medium font-poppins"
+              className="w-full px-4 py-3 text-white bg-primary rounded-3xl hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 font-medium font-poppins flex items-center justify-center"
+              disabled={loading}
             >
-              Login
+              {loading ? <Spin /> : "Login"}
             </button>
             <div className="font-poppins text-left mt-6 ml-5 xl:hidden">
               <p className="font-normal text-sm mt-3">
