@@ -1,8 +1,38 @@
 import axios from "axios";
 import { get, post, put, patch, delete_request } from "../utils/HttpRequest";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { notification } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Axios interceptor to handle 403 errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 403) {
+      const navigate = useNavigate();
+      const { dispatch } = useAuthContext();
+
+      dispatch({ type: "LOGOUT" });
+
+      notification.error({
+        message: "Session Expired",
+        description: "Your session has expired. Please log in again.",
+      });
+
+      navigate("/auth/login");
+    }
+    return Promise.reject(error);
+  }
+);
 /* =================================================== Authentication ========================================================== */
 export const authLogin = async (params) => {
   try {
@@ -71,6 +101,34 @@ export const requestEmailVerification = async (email) => {
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
+};
+
+export const editProfile = async (params) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+  const url = `${API_URL}/profile/edit`;
+  return await put(url, params, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+};
+
+export const changePassword = async (params) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+  const url = `${API_URL}/profile/changePassword`;
+  return await put(url, params, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
   });
 };

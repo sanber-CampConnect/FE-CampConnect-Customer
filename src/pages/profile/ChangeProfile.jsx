@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { PrimaryButton } from "../../components/atoms/Buttons";
+import { editProfile } from "../../services/api";
+import { notification } from "antd";
 
 const ChangeProfile = (props) => {
-  const { setSection, section, childData } = props;
+  const { setSection, section, childData, onProfileUpdate } = props;
   const [formData, setFormData] = useState({
     username: "",
-    full_name: "",
+    fullname: "",
     email: "",
     phone: "",
     photo_profile: "",
@@ -14,8 +16,8 @@ const ChangeProfile = (props) => {
   useEffect(() => {
     if (section === "edit" && childData) {
       setFormData({
-        username: childData.name || "",
-        full_name: childData.full_name || "",
+        username: childData.username || "",
+        fullname: childData.fullname || "",
         email: childData.email || "",
         phone: childData.phone || "",
       });
@@ -30,6 +32,26 @@ const ChangeProfile = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Received values of form: ", formData);
+    editProfile(formData)
+      .then((res) => {
+        if (res) {
+          notification.success({
+            message: "Sukses",
+            description: "Sukses memperbarui data profil!",
+          });
+          if (onProfileUpdate) {
+            onProfileUpdate(formData);
+          }
+          setSection("default");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        notification.error({
+          message: "Error",
+          description: "Failed to update profile.",
+        });
+      });
   };
 
   return (
@@ -54,15 +76,15 @@ const ChangeProfile = (props) => {
         </div>
         <div>
           <label
-            htmlFor="full_name"
+            htmlFor="fullname"
             className="block mb-2 text-base font-medium text-gray-900 "
           >
             Nama Lengkap
           </label>
           <input
             type="text"
-            id="full_name"
-            value={formData.full_name}
+            id="fullname"
+            value={formData.fullname}
             onChange={handleChange}
             className="bg-gray-50 text-gray-900 text-base rounded-lg focus:outline-primary 0 block w-full p-2.5"
             placeholder="Masukkan nama lengkap"
@@ -96,7 +118,7 @@ const ChangeProfile = (props) => {
           <input
             type="tel"
             id="phone"
-            value={formData.phone}
+            value={formData.phone === " " ? "" : formData.phone}
             onChange={handleChange}
             className="bg-gray-50 text-gray-900 text-base rounded-lg focus:outline-primary 0 block w-full p-2.5"
             placeholder="081234567890"

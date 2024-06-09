@@ -144,7 +144,7 @@ const Navbar = () => {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="flex flex-col items-start w-full md:hidden p-4">
-            <ul className="flex flex-col space-y-4 font-medium">
+            <ul className="flex flex-col space-y-4 font-medium mb-6">
               <li>
                 <a
                   href="/home"

@@ -3,6 +3,7 @@ import PhotoProfile from "../../assets/images/photo-profile.svg";
 import ChangeProfile from "./ChangeProfile";
 import ChangePassword from "./ChangePassword";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import { notification } from "antd";
 import "sweetalert2/src/sweetalert2.scss";
 import {
   getProfile,
@@ -40,7 +41,14 @@ const Profile = () => {
       })
       .catch((err) => {
         console.error(err);
-        throw new Error(err);
+        if (err.response && err.response.status === 403) {
+          dispatch({ type: "LOGOUT" });
+          navigate("/auth/login");
+          notification.error({
+            message: "Session Expired",
+            description: "Your session has expired. Please log in again.",
+          });
+        }
       })
       .finally(() => {
         setLoading(false);
@@ -151,15 +159,19 @@ const Profile = () => {
     setSection("change_pass");
   };
 
+  const handleProfileUpdate = (updatedData) => {
+    setData(updatedData);
+  };
+
   return (
-    <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-8">
+    <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-8 justify-center">
       {/* Sidebar */}
       <div className="w-full md:w-1/3">
         {data && (
           <div className="account-user flex flex-row justify-start space-x-4 mb-3 bg-[#F5F1F1] p-4 rounded-xl">
-            <img src={data.photo_profile || PhotoProfile} alt={data.name} />
+            <img src={data.photo_profile || PhotoProfile} alt={data.username} />
             <div className="flex flex-col justify-center space-y-2">
-              <h5 className="text-lg font-medium">{data.name}</h5>
+              <h5 className="text-lg font-medium">{data.username}</h5>
               <p className="text-neutral text-base font-thin">{data.email}</p>
             </div>
           </div>
@@ -222,15 +234,25 @@ const Profile = () => {
       </div>
 
       {data && section === "default" && (
-        <div className="w-full md:w-1/2 max-h-1/2 h-fit bg-[#F5F1F1] rounded-xl p-8">
-          <div className="grid grid-cols-2 gap-4">
+        <div className="w-full md:w-1/2 max-h-1/2 h-fit bg-[#F5F1F1] rounded-xl p-6 xl:p-8">
+          <div className="grid grid-rows xl:grid-cols-2 gap-4">
             <div className="flex flex-col">
               <label className="font-medium text-base mb-1">Nama Lengkap</label>
-              <h1 className="text-neutral">Talitha Dwi Arini</h1>
+              <h1 className="text-neutral">{data.fullname}</h1>
             </div>
             <div className="flex flex-col">
               <label className="font-medium text-base mb-1">Nama Akun</label>
-              <h1 className="text-neutral">{data.name}</h1>
+              <h1 className="text-neutral">{data.username}</h1>
+            </div>
+            <div className="flex flex-col">
+              <label className="font-medium text-base mb-1">
+                Nomor Handphone
+              </label>
+              <h1 className="text-neutral">
+                {data.phone == " "
+                  ? "Anda belum memasukkan nomor telfon"
+                  : data.phone}
+              </h1>
             </div>
             <div className="flex flex-col">
               <label className="font-medium text-base mb-1">Email</label>
@@ -259,12 +281,6 @@ const Profile = () => {
                 Verifikasi Email
               </button>
             </div>
-            <div className="flex flex-col">
-              <label className="font-medium text-base mb-1">
-                Nomor Handphone
-              </label>
-              <h1 className="text-neutral">{data.phone || "-"}</h1>
-            </div>
           </div>
         </div>
       )}
@@ -277,6 +293,7 @@ const Profile = () => {
               childData={childData}
               setSection={setSection}
               section={section}
+              onProfileUpdate={handleProfileUpdate}
             />
           )}
           {section === "change_pass" && (
