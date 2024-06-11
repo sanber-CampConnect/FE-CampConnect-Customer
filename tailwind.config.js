@@ -15,6 +15,7 @@ export default {
       success: "#22bb33",
       failed: "#bb2124",
       warning: "#f0ad4e",
+      black: "#000000",
     },
     fontSize: {
       s: [

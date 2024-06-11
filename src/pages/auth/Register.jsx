@@ -3,7 +3,7 @@ import { IoEyeSharp } from "react-icons/io5";
 import { FaEyeSlash } from "react-icons/fa";
 import Logo from "../../assets/images/logo.png";
 import { iconEmail, iconLock } from "../../assets/icons";
-import ImgPlaceholder from "../../assets/placeholder.png";
+import ImgPlaceholder from "../../assets/images/placeholder.png";
 import { FaRegUser } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { authRegister } from "../../services/api";
