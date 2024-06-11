@@ -147,7 +147,7 @@ const Navbar = () => {
             <ul className="flex flex-col space-y-4 font-medium mb-6 z-50">
               <li>
                 <a
-                  href="/home"
+                  href="/"
                   className="block p-2 text-primary rounded hover:text-secondary"
                   aria-current="page"
                 >
