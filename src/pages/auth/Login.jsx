@@ -88,8 +88,8 @@ const Login = () => {
           <p className="font-medium text-base mt-3 hidden xl:block">
             If you don’t have an account register
             <br />
-            You can
-            <Link to="/auth/register" className="text-red-600">
+            You can {" "}
+            <Link to="/auth/register" className="text-failed hover:underline">
               Register here!
             </Link>
           </p>
@@ -192,8 +192,8 @@ const Login = () => {
               <p className="font-normal text-sm mt-3">
                 If you don’t have an account register
                 <br />
-                You can
-                <Link to="/auth/register" className="text-red-600">
+                You can{" "}
+                <Link to="/auth/register" className="text-[#2D5BFF] hover:underline">
                   Register here!
                 </Link>
               </p>
