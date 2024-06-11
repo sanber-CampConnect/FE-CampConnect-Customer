@@ -94,7 +94,7 @@ const reviews = [
 const NextArrow = ({ onClick }) => {
     return (
         <div
-            className="absolute top-1/2 -right-16 z-10 transform -translate-y-1/2 cursor-pointer text-black bg-white rounded-full p-2 shadow-md hover:bg-gray-200 hidden xl:block "
+            className="absolute top-1/2 -right-16 z-10 transform -translate-y-1/2 cursor-pointer text-black bg-white  p-2 shadow-md hover:bg-gray-200 hidden xl:block "
             onClick={onClick}
         >
             &#9654;
@@ -105,7 +105,7 @@ const NextArrow = ({ onClick }) => {
 const PrevArrow = ({ onClick }) => {
     return (
         <div
-            className="absolute top-1/2 -left-12 z-10 transform -translate-y-1/2 cursor-pointer text-black bg-white rounded-full p-2 shadow-md hover:bg-gray-200 hidden xl:block"
+            className="absolute top-1/2 -left-12 z-10 transform -translate-y-1/2 cursor-pointer text-black bg-white  p-2 shadow-md hover:bg-gray-200 hidden xl:block"
             onClick={onClick}
         >
             &#9664;
@@ -148,7 +148,7 @@ const Home = () => {
     return (
         <>
             <div className="flex justify-center items-center flex-col">
-                <div className="text-center xl:text-left xl:px-20">
+                <div className="text-center xl:text-left xl:px-60">
                     <h1 className="font-bold text-primary text-[36px] xl:hidden">
                         Sewa Alat Camping Terbaik Malang Raya
                     </h1>
@@ -157,17 +157,17 @@ const Home = () => {
                             <h1 className="font-bold text-primary text-[56px] text-left mr-5 hidden xl:block xl:w-full">
                                 Sewa Alat Camping Terbaik Malang Raya
                             </h1>
-                            <p className="text-neutral text-[18px] pt-5 xl:w-full">
+                            <p className="text-neutral text-[18px] pt-5 xl:w-full hidden xl:block">
                                 Jadikan petualanganmu berkesan
                             </p>
                             <div className="flex gap-5">
                                 <PrimaryButton
                                     text="Cara Pemesanan"
-                                    className="mt-10 w-60 h-14 rounded-[5rem] hidden xl:block"
+                                    className="mt-10 w-60 h-14  hidden xl:block"
                                 />
                                 <OutlineButton
                                     text="Hubungi Admin"
-                                    className="mt-10 w-60 h-14 rounded-full hidden xl:block"
+                                    className="mt-10 w-60 h-14  hidden xl:block"
                                 />
                             </div>
                         </div>
@@ -189,11 +189,11 @@ const Home = () => {
                     </div>
                     <PrimaryButton
                         text="Cara Pemesanan"
-                        className="mt-10 w-60 h-14 rounded-[5rem] xl:hidden"
+                        className="mt-10 w-60 h-14  xl:hidden"
                     />
                     <OutlineButton
                         text="Hubungi Admin"
-                        className="mt-4 w-60 h-14 rounded-full xl:hidden"
+                        className="mt-4 w-60 h-14  xl:hidden"
                     />
                 </div>
                 <div className="text-center pt-10">
@@ -216,7 +216,7 @@ const Home = () => {
                 </div>
                 <PrimaryButton
                     text="Selengkapnya"
-                    className="mt-16 w-full h-14 rounded-[5rem] xl:w-40 xl:rounded-[5rem]"
+                    className="mt-16 w-full h-14  xl:w-40 xl:"
                 />
                 <div className="text-center pt-10 xl:pt-20">
                     <h1 className="font-bold text-secondary text-2xl">
@@ -244,11 +244,11 @@ const Home = () => {
                         <input
                             type="text"
                             placeholder="Cari"
-                            className="w-full max-w-md p-2 border border-gray-300 rounded-[5rem] focus:outline-none focus:ring-2 focus:ring-secondary text-left xl:max-w-full "
+                            className="w-full max-w-md p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-secondary text-left xl:max-w-full "
                         />
                         <PrimaryButton
                             text="Filter"
-                            className="rounded-[5rem] w-24"
+                            className=" w-24"
                         />
                     </div>
                     <p className="text-md pt-10 text-neutral mb-5 xl:mb-0">
@@ -268,7 +268,7 @@ const Home = () => {
                 </div>
                 <PrimaryButton
                     text="Selengkapnya"
-                    className="mt-16 w-full h-14 rounded-[5rem] xl:hidden"
+                    className="mt-16 w-full h-14  xl:hidden"
                 />
                 <div className="xl:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 hidden ">
                     {products.map((product) => (

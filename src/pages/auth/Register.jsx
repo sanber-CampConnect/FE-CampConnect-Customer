@@ -122,7 +122,7 @@ const Register = () => {
             If you already have an account
             <br />
             You can{" "}
-            <Link to="/auth/login" className="text-red-600">
+            <Link to="/auth/login" className="text-failed hover:underline">
               Login here!
             </Link>
           </p>
@@ -253,14 +253,14 @@ const Register = () => {
           <div className="mt-4">
             <button
               type="submit"
-              className="w-full px-4 py-3 text-white bg-primary rounded-none focus:outline-none focus:bg-primary-dark"
+              className="w-full px-4 py-3 text-white bg-primary rounded-3xl focus:outline-none focus:bg-primary-dark"
             >
               Register
             </button>
           </div>
-          <p className="mt-4 text-center text-sm text-black">
+          <p className="mt-4 text-center text-sm text-black xl:hidden">
             If you already have an account{" "}
-            <Link to="/auth/login" className="text-red-600">
+            <Link to="/auth/login" className="text-[#2D5BFF] hover:underline">
               Login here!
             </Link>
           </p>
