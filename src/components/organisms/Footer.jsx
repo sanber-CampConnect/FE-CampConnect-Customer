@@ -5,7 +5,7 @@ const Footer = () => {
     color: "#064F3B",
   };
   return (
-    <footer className="flex flex-col xl:flex-row xl:justify-between text-center xl:text-left py-5 xl:py-16 xl:w-full xl:p-[24px]">
+    <footer className="flex flex-col xl:flex-row xl:justify-between text-center xl:text-left py-5 xl:py-16 xl:w-full">
       <div className="text-md mb-4 text-[#9795B5] leading-8">
         <span className="xl:hidden">
           © 2024 Camp Connect <br />
