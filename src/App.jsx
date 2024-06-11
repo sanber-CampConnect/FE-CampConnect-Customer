@@ -12,6 +12,7 @@ import Page404 from "./components/organisms/Page404.jsx";
 import PageLoading from "./components/organisms/PageLoading.jsx";
 import Home from "./pages/home/Home.jsx";
 import Catalogue from "./pages/catalogue/Catalogue.jsx";
+import DetailCatalogue from "./pages/catalogue/DetailCatalogue.jsx";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { AuthContextProvider } from "./context/AuthContext.jsx";
 import { Suspense } from "react";
@@ -51,6 +52,14 @@ function App() {
                 element={
                   <HomeLayout>
                     <Catalogue />
+                  </HomeLayout>
+                }
+              />
+              <Route
+                path="/catalogue/:productId"
+                element={
+                  <HomeLayout>
+                    <DetailCatalogue />
                   </HomeLayout>
                 }
               />

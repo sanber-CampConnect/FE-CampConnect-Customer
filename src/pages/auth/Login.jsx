@@ -4,7 +4,7 @@ import { FaEyeSlash } from "react-icons/fa";
 import Logo from "../../assets/images/logo.png";
 import IconEmail from "../../assets/icons/iconEmail.png";
 import IconLock from "../../assets/icons/iconLock.png";
-import ImgPlaceholder from "../../assets/placeholder.png";
+import ImgPlaceholder from "../../assets/images/placeholder.png";
 import { Link, useNavigate } from "react-router-dom";
 import { authLogin } from "../../services/api";
 import { notification, Spin } from "antd";

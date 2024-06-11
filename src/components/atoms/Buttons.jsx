@@ -1,8 +1,9 @@
-const PrimaryButton = ({ text, className, type }) => {
+const PrimaryButton = ({ text, className, type, onClick }) => {
   return (
     <button
       type={type}
-      className={`bg-primary text-[#ffff] !important rounded-3xl px-4 py-2 mr-2 ${className}`}
+      className={`bg-primary text-[#ffff] px-4 py-2 mr-2 rounded-3xl ${className}`}
+      onClick={onClick}
     >
       {text}
     </button>

@@ -1,94 +1,94 @@
 import {
-    PopularProduct,
-    ReviewUser,
-    ProductCard,
+  PopularProduct,
+  ReviewUser,
+  ProductCard,
 } from "../../components/atoms/Card";
 import { PrimaryButton, OutlineButton } from "../../components/atoms/Buttons";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
-import ImgHerosection from "../../assets/images/hero-section.png";
-import ImgHerosectiondesktop from "../../assets/images/hero-section-desktop.png";
-import Product1 from "../../assets/images/Product_1.png";
-import Product2 from "../../assets/images/Product_2.png";
-import Product3 from "../../assets/images/Product_3.png";
-import Product4 from "../../assets/images/Product_4.png";
-import Product5 from "../../assets/images/Product_5.png";
-import Profile from "../../assets/images/Profile.png";
-import iconInstagram from "../../assets/icons/iconInstagram.png";
-import iconWhatsApp from "../../assets/icons/iconWhatsApp.png";
+import {
+  heroSectionDesktop,
+  heroSectionMobile,
+  Product1,
+  Product2,
+  Product3,
+  Product4,
+  Product5,
+  photoProfile,
+} from "../../assets/images/index";
+import { Footer } from "../../components/organisms/Footer";
 
 const products = [
-    {
-        id: 1,
-        name: "Tenda 2L Kap. 4-5P Naturhike",
-        image: Product1,
-        description: "Tenda yang kokoh dan nyaman untuk 4-5 orang.",
-        link: "#",
-    },
-    {
-        id: 2,
-        name: "Tenda 2L Kap. 6-7P Forester",
-        image: Product2,
-        description: "Tenda luas untuk 6-7 orang.",
-        link: "#",
-    },
-    {
-        id: 3,
-        name: "Headlamp",
-        image: Product3,
-        description: "Lampu kepala dengan pencahayaan terang.",
-        link: "#",
-    },
-    {
-        id: 4,
-        name: "Lampu Tenda Bakpao",
-        image: Product4,
-        description: "Lampu tenda yang hemat energi.",
-        link: "#",
-    },
-    {
-        id: 5,
-        name: "Tenda 2L Kap. 4-5P Borneo",
-        image: Product5,
-        description: "Tenda yang cocok untuk keluarga kecil.",
-        link: "#",
-    },
-    {
-        id: 6,
-        name: "Tenda EXL CHANODOUG KAP. 12 P",
-        image: Product5,
-        description: "Tenda besar untuk 12 orang.",
-        link: "#",
-    },
+  {
+    id: 1,
+    product_name: "Tenda 2L Kap. 4-5P Naturhike",
+    image: Product1,
+    description: "Tenda yang kokoh dan nyaman untuk 4-5 orang.",
+    link: "#",
+  },
+  {
+    id: 2,
+    product_name: "Tenda 2L Kap. 6-7P Forester",
+    image: Product2,
+    description: "Tenda luas untuk 6-7 orang.",
+    link: "#",
+  },
+  {
+    id: 3,
+    product_name: "Headlamp",
+    image: Product3,
+    description: "Lampu kepala dengan pencahayaan terang.",
+    link: "#",
+  },
+  {
+    id: 4,
+    product_name: "Lampu Tenda Bakpao",
+    image: Product4,
+    description: "Lampu tenda yang hemat energi.",
+    link: "#",
+  },
+  {
+    id: 5,
+    product_name: "Tenda 2L Kap. 4-5P Borneo",
+    image: Product5,
+    description: "Tenda yang cocok untuk keluarga kecil.",
+    link: "#",
+  },
+  {
+    id: 6,
+    product_name: "Tenda EXL CHANODOUG KAP. 12 P",
+    image: Product5,
+    description: "Tenda besar untuk 12 orang.",
+    link: "#",
+  },
 ];
 
 const reviews = [
-    {
-        id: 1,
-        name: "John Carter",
-        title: "Head of Marketing",
-        subtext: "“An amazing service”",
-        image: Profile,
-        text: "Lorem ipsum dolor sit ametolil col consectetur adipiscing lectus a nunc auris scelerisque sed egestas.",
-    },
-    {
-        id: 2,
-        name: "Jane Doe",
-        title: "Manajer Produk",
-        subtext: "“An amazing service”",
-        image: Profile,
-        text: "Lorem ipsum dolor sit ametolil col consectetur adipiscing lectus a nunc auris scelerisque sed egestas.",
-    },
-    {
-        id: 3,
-        name: "Sam Smith",
-        title: "CEO",
-        subtext: "“An amazing service”",
-        image: Profile,
-        text: "Lorem ipsum dolor sit ametolil col consectetur adipiscing lectus a nunc auris scelerisque sed egestas.",
-    },
+  {
+    id: 1,
+    name: "John Carter",
+    title: "Head of Marketing",
+    subtext: "“An amazing service”",
+    image: photoProfile,
+    text: "Lorem ipsum dolor sit ametolil col consectetur adipiscing lectus a nunc auris scelerisque sed egestas.",
+  },
+  {
+    id: 2,
+    name: "Jane Doe",
+    title: "Manajer Produk",
+    subtext: "“An amazing service”",
+    image: photoProfile,
+    text: "Lorem ipsum dolor sit ametolil col consectetur adipiscing lectus a nunc auris scelerisque sed egestas.",
+  },
+  {
+    id: 3,
+    name: "Sam Smith",
+    title: "CEO",
+    subtext: "“An amazing service”",
+    image: photoProfile,
+    text: "Lorem ipsum dolor sit ametolil col consectetur adipiscing lectus a nunc auris scelerisque sed egestas.",
+  },
 ];
 
 const NextArrow = ({ onClick }) => {
@@ -114,38 +114,38 @@ const PrevArrow = ({ onClick }) => {
 };
 
 const Home = () => {
-    const settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 4,
-        slidesToScroll: 1,
-        arrows: true,
-        nextArrow: <NextArrow className="hidden xl:block" />,
-        prevArrow: <PrevArrow className="hidden xl:block" />,
-        responsive: [
-            {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 4,
-                    slidesToScroll: 1,
-                    infinite: true,
-                    dots: true,
-                    nextArrow: <NextArrow className="hidden xl:block" />,
-                    prevArrow: <PrevArrow className="hidden xl:block" />,
-                },
-            },
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1,
-                },
-            },
-        ],
-    };
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    arrows: true,
+    nextArrow: <NextArrow className="hidden xl:block" />,
+    prevArrow: <PrevArrow className="hidden xl:block" />,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+          nextArrow: <NextArrow className="hidden xl:block" />,
+          prevArrow: <PrevArrow className="hidden xl:block" />,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+  };
 
-    return (
+return (
         <>
             <div className="flex justify-center items-center flex-col">
                 <div className="text-center xl:text-left xl:px-60">

@@ -32,7 +32,7 @@ const Navbar = () => {
       <nav
         className={`${
           isScrolled || isMenuOpen ? "bg-opacity-60 backdrop-blur-lg" : ""
-        } z-[100] fixed top-0 left-0 w-screen bg-white duration-300 transition-all`}
+        } z-50 fixed top-0 left-0 w-screen bg-white duration-300 transition-all`}
       >
         <div className="max-w-screen-xl flex items-center justify-between mx-auto py-4 px-6">
           {/* Logo */}
@@ -81,7 +81,7 @@ const Navbar = () => {
             <ul className="flex flex-row space-x-8 font-medium rtl:space-x-reverse">
               <li>
                 <a
-                  href="/home"
+                  href="/"
                   className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
                   aria-current="page"
                 >
@@ -143,8 +143,8 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="flex flex-col items-start w-full md:hidden p-4">
-            <ul className="flex flex-col space-y-4 font-medium mb-6">
+          <div className="flex flex-col items-start w-full md:hidden p-4 z-50">
+            <ul className="flex flex-col space-y-4 font-medium mb-6 z-50">
               <li>
                 <a
                   href="/home"

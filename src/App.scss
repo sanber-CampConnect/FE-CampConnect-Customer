@@ -58,7 +58,11 @@
 
 .search-tabs-sticky {
   position: sticky;
-  top: 70px; // Sesuaikan ini dengan tinggi Navbar Anda
-  z-index: 10; // Pastikan lebih rendah dari z-index Navbar
-  background: white; // Opsional: untuk memastikan teks tidak terlihat melalui
+  top: 0px;
+  // z-index: 5;
+  background: white;
+}
+
+.ant-input-number-input {
+  text-align: center !important;
 }
