@@ -1,10 +1,19 @@
-import { useState } from "react";
-import { IoEyeSharp } from "react-icons/io5";
-import { FaEyeSlash } from "react-icons/fa";
-import Logo from "../../assets/images/logo.png";
-import IconLock from "../../assets/icons/iconLock.png";
+import { useState } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { resetPassword } from '../../services/api';
+import { notification } from 'antd';
+import { IoEyeSharp } from 'react-icons/io5';
+import { FaEyeSlash } from 'react-icons/fa';
+import Logo from '../../assets/images/logo.png';
+import IconLock from '../../assets/icons/iconLock.png';
 
 const UpdatePassword = () => {
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token');
+  const navigate = useNavigate(); // Gunakan useNavigate untuk navigasi
+
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [newPasswordVisible, setNewPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
@@ -14,6 +23,38 @@ const UpdatePassword = () => {
 
   const toggleConfirmPasswordVisibility = () => {
     setConfirmPasswordVisible(!confirmPasswordVisible);
+  };
+
+  const handleUpdatePassword = async (e) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      notification.error({
+        message: 'Error',
+        description: 'Passwords do not match.',
+      });
+      return;
+    }
+  
+    const data = {
+      newPassword: newPassword,
+      confirmPassword: confirmPassword
+    };
+  
+    try {
+      const response = await resetPassword(token, data);
+      console.log(response.data); // Log respons dari backend
+      notification.success({
+        message: 'Success',
+        description: 'Your password has been updated successfully.',
+      });
+      navigate('/auth/success'); // Navigasi ke halaman success
+    } catch (error) {
+      console.error(error.response?.data || error.message); // Log kesalahan
+      notification.error({
+        message: 'Error',
+        description: error.response?.data.message || 'Failed to update password.',
+      });
+    }
   };
 
   return (
@@ -32,7 +73,7 @@ const UpdatePassword = () => {
             password
           </p>
         </div>
-        <form className="space-y-6 pt-12 xl:-ml-10">
+        <form className="space-y-6 pt-12 xl:-ml-10" onSubmit={handleUpdatePassword}>
           <div className="relative">
             <label
               htmlFor="new_password"
@@ -53,6 +94,8 @@ const UpdatePassword = () => {
                 required
                 className="w-full pl-10 pr-10 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
                 placeholder="Enter your new password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
               />
               <div
                 className="absolute right-3 cursor-pointer"
@@ -86,6 +129,8 @@ const UpdatePassword = () => {
                 required
                 className="w-full pl-10 pr-10 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
                 placeholder="Confirm your new password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
               <div
                 className="absolute right-3 cursor-pointer"

@@ -8,7 +8,7 @@ const SuccessPass = () => {
                 <p className="text-base mt-2 font-poppins">
                 Congratulations! Your Password has <br />been changed. Click continue to login
                 </p>
-                <Link to="">
+                <Link to="/auth/login">
                 <div className="pt-10">
                         <button
                             type="submit"
