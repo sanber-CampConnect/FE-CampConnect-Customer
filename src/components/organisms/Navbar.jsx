@@ -200,7 +200,7 @@ const Navbar = () => {
             {!user && (
               <div className="button-login">
                 <a href="/auth/login">
-                  <OutlineButton text="Login" />
+                  <OutlineButton text="Login" className="border-secondary" />
                 </a>
               </div>
             )}
