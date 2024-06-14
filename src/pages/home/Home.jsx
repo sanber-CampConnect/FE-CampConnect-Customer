@@ -167,7 +167,7 @@ const Home = () => {
                 />
                 <OutlineButton
                   text="Hubungi Admin"
-                  className="mt-10 w-60 h-14  hidden xl:block"
+                  className="mt-10 w-60 h-14 border-secondary hidden xl:block"
                 />
               </div>
             </div>
@@ -193,7 +193,7 @@ const Home = () => {
           />
           <OutlineButton
             text="Hubungi Admin"
-            className="mt-4 w-60 h-14  xl:hidden"
+            className="mt-4 w-60 h-14 border-secondary xl:hidden"
           />
         </div>
         <div className="text-center pt-10">

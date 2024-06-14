@@ -1,18 +1,24 @@
 import { useState, useEffect } from "react";
-import PhotoProfile from "../../assets/images/photo-profile.svg";
+import { photoProfile } from "../../assets/images/index";
 import ChangeProfile from "./ChangeProfile";
 import ChangePassword from "./ChangePassword";
 import Swal from "sweetalert2/dist/sweetalert2.js";
-import { notification } from "antd";
 import "sweetalert2/src/sweetalert2.scss";
 import {
   getProfile,
   logOut,
   deleteAccount,
   requestEmailVerification,
+  editProfile,
+  getMediaUser,
 } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { OutlineButton } from "../../components/atoms/Buttons";
+import {
+  PopUpChangePicture,
+  PopUpCropPicture,
+} from "../../components/atoms/Popup";
 
 const Profile = () => {
   const [section, setSection] = useState("default");
@@ -22,9 +28,23 @@ const Profile = () => {
   const { dispatch } = useAuthContext();
   const navigate = useNavigate();
 
+  // handle change photo profile
+  const [currentImage, setCurrentImage] = useState(null);
+  const [isCropOpen, setIsCropOpen] = useState(false);
+  const [isChangePictureOpen, setIsChangePictureOpen] = useState(false);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [dataPhotoProfile, setDataPhotoProfile] = useState(null);
+
   useEffect(() => {
     getDataProfile();
   }, []);
+
+  useEffect(() => {
+    if (data && data.image && data.image.trim() !== "") {
+      const imageUrl = getMediaUser(data.image);
+      setDataPhotoProfile(imageUrl);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (section === "default") {
@@ -41,14 +61,6 @@ const Profile = () => {
       })
       .catch((err) => {
         console.error(err);
-        if (err.response && err.response.status === 403) {
-          dispatch({ type: "LOGOUT" });
-          navigate("/auth/login");
-          notification.error({
-            message: "Session Expired",
-            description: "Your session has expired. Please log in again.",
-          });
-        }
       })
       .finally(() => {
         setLoading(false);
@@ -141,11 +153,22 @@ const Profile = () => {
         });
       })
       .catch((err) => {
-        Swal.fire({
-          title: "Gagal",
-          text: "Terjadi kesalahan saat mengirim permintaan verifikasi email.",
-          icon: "error",
-        });
+        if (
+          err.response.data.info ===
+          "This email has been verified. Verification is not needed"
+        ) {
+          Swal.fire({
+            title: "Gagal",
+            text: "Anda sudah melakukan verifikasi email",
+            icon: "error",
+          });
+        } else {
+          Swal.fire({
+            title: "Gagal",
+            text: "Terjadi kesalahan saat mengirim permintaan verifikasi email.",
+            icon: "error",
+          });
+        }
         console.error(err);
       });
   };
@@ -163,16 +186,84 @@ const Profile = () => {
     setData(updatedData);
   };
 
+  // handle change photo profile
+  const handleOpenChangePicture = () => {
+    setIsChangePictureOpen(true);
+  };
+
+  const handleCloseChangePicture = () => {
+    setIsChangePictureOpen(false);
+    setCurrentImage(null);
+  };
+
+  const handleSetImage = (imageData) => {
+    // console.log("Image set for cropping:", imageData);
+    setCurrentImage(imageData);
+    setIsChangePictureOpen(false);
+    setIsCropOpen(true);
+  };
+
+  const handleSaveCroppedImage = async (croppedImageFile) => {
+    const formData = new FormData();
+    formData.append("image", croppedImageFile);
+
+    formData.append("email", data.email);
+    formData.append("fullname", data.fullname);
+    formData.append("id", data.id);
+    formData.append("is_verified", data.is_verified);
+    formData.append("password", data.password);
+    formData.append("phone", data.phone);
+    formData.append("role", data.role);
+    formData.append("username", data.username);
+
+    try {
+      const response = await editProfile(formData);
+      Swal.fire({
+        title: "Berhasil",
+        text: "Foto profil berhasil diubah.",
+        icon: "success",
+      });
+      console.log(response);
+      setIsCropOpen(false);
+      getDataProfile();
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      Swal.fire({
+        title: "Error",
+        text: "Terjadi kesalahan saat memperbarui foto profil.",
+        icon: "error",
+      });
+    }
+  };
+
+  const handleCropComplete = (croppedArea, croppedAreaPixels) => {
+    console.log("Crop complete", croppedAreaPixels);
+    setCroppedAreaPixels(croppedAreaPixels);
+  };
+
   return (
     <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-8 justify-center">
       {/* Sidebar */}
       <div className="w-full md:w-1/3">
         {data && (
           <div className="account-user flex flex-row justify-start space-x-4 mb-3 bg-[#F5F1F1] p-4 rounded-xl">
-            <img src={data.photo_profile || PhotoProfile} alt={data.username} />
+            <img
+              src={dataPhotoProfile || photoProfile}
+              alt={data.username}
+              className="w-24 h-24"
+              style={{
+                borderRadius: "50%",
+                objectFit: "cover",
+              }}
+            />
             <div className="flex flex-col justify-center space-y-2">
               <h5 className="text-lg font-medium">{data.username}</h5>
               <p className="text-neutral text-base font-thin">{data.email}</p>
+              <OutlineButton
+                text="Ubah Foto Profil"
+                className="text-sm w-full border-primary"
+                onClick={handleOpenChangePicture}
+              />
             </div>
           </div>
         )}
@@ -301,6 +392,24 @@ const Profile = () => {
           )}
         </div>
       )}
+
+      {/* Popups */}
+      <PopUpChangePicture
+        photoProfile={dataPhotoProfile}
+        user={data}
+        isOpen={isChangePictureOpen}
+        onClose={handleCloseChangePicture}
+        setImage={handleSetImage}
+        onCrop={() => setIsCropOpen(true)}
+      />
+
+      <PopUpCropPicture
+        isOpen={isCropOpen}
+        onClose={() => setIsCropOpen(false)}
+        image={currentImage}
+        onCropComplete={handleCropComplete}
+        onSave={handleSaveCroppedImage}
+      />
     </div>
   );
 };

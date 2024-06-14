@@ -1,71 +1,198 @@
 import "./App.scss";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./pages/auth/Login.jsx";
-import Profile from "./pages/profile/Profile.jsx";
-import Register from "./pages/auth/Register.jsx";
-import ForgotPassword from "./pages/auth/ForgotPassword.jsx";
-import UpdatePassword from "./pages/auth/UpdatePassword.jsx";
-import SuccessPass from "./pages/auth/SuccessPass.jsx";
-import HomeLayout from "./layouts/HomeLayout.jsx";
-import Page404 from "./components/organisms/Page404.jsx";
-import PageLoading from "./components/organisms/PageLoading.jsx";
-import Home from "./pages/home/Home.jsx";
-import Catalogue from "./pages/catalogue/Catalogue.jsx";
-import DetailCatalogue from "./pages/catalogue/DetailCatalogue.jsx";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate,
+  Outlet,
+} from "react-router-dom";
+import React, { Suspense, useEffect, useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { AuthContextProvider } from "./context/AuthContext.jsx";
-import { Suspense } from "react";
+import { getProfile } from "./services/api.js";
+import { notification } from "antd";
+import PageLoading from "./components/organisms/PageLoading.jsx";
+import Page404 from "./components/organisms/Page404.jsx";
+
+const Login = React.lazy(() => import("./pages/auth/Login.jsx"));
+const Profile = React.lazy(() => import("./pages/profile/Profile.jsx"));
+const Register = React.lazy(() => import("./pages/auth/Register.jsx"));
+const ForgotPassword = React.lazy(() =>
+  import("./pages/auth/ForgotPassword.jsx")
+);
+const UpdatePassword = React.lazy(() =>
+  import("./pages/auth/UpdatePassword.jsx")
+);
+const SuccessPass = React.lazy(() => import("./pages/auth/SuccessPass.jsx"));
+const HomeLayout = React.lazy(() => import("./layouts/HomeLayout.jsx"));
+const Home = React.lazy(() => import("./pages/home/Home.jsx"));
+const Catalogue = React.lazy(() => import("./pages/catalogue/Catalogue.jsx"));
+const DetailCatalogue = React.lazy(() =>
+  import("./pages/catalogue/DetailCatalogue.jsx")
+);
+
+// handle token not found error
+const ProtectedRoute = ({ children }) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/auth/login");
+    }
+  }, [navigate]);
+
+  const token = localStorage.getItem("token");
+  return token ? <RequireAuth>{children}</RequireAuth> : null;
+};
+
+// token validation
+const RequireAuth = ({ children }) => {
+  const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getDataProfile = async () => {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        notification.error({
+          message: "Tidak ada token!",
+          description: "Tidak ditemukan token. Silahkan masuk lagi.",
+        });
+        navigate("/auth/login");
+        return;
+      }
+
+      try {
+        await getProfile();
+        setLoggedIn(true);
+      } catch (err) {
+        if (
+          err.response &&
+          (err.response.status === 401 || err.response.status === 403)
+        ) {
+          notification.error({
+            message: "Sesi Berakhir!",
+            description: "Sesi Anda telah kedaluwarsa. Silakan masuk lagi.",
+          });
+          navigate("/auth/login");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getDataProfile();
+  }, [navigate]);
+
+  if (loading) {
+    return <PageLoading />;
+  }
+
+  return isLoggedIn ? children : null;
+};
+
+const AppContent = () => {
+  return (
+    <Routes>
+      <Route path="*" element={<Page404 />} />
+      <Route
+        path="/auth/login"
+        element={
+          <Suspense fallback={<PageLoading />}>
+            <Login />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/auth/register"
+        element={
+          <Suspense fallback={<PageLoading />}>
+            <Register />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/auth/forgot-pass"
+        element={
+          <Suspense fallback={<PageLoading />}>
+            <ForgotPassword />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/auth/resetPassword"
+        element={
+          <Suspense fallback={<PageLoading />}>
+            <UpdatePassword />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/auth/success"
+        element={
+          <Suspense fallback={<PageLoading />}>
+            <SuccessPass />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Suspense fallback={<PageLoading />}>
+              <HomeLayout>
+                <Profile />
+              </HomeLayout>
+            </Suspense>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/"
+        element={
+          <Suspense fallback={<PageLoading />}>
+            <HomeLayout>
+              <Home />
+            </HomeLayout>
+          </Suspense>
+        }
+      />
+      <Route
+        path="/catalogue"
+        element={
+          <Suspense fallback={<PageLoading />}>
+            <HomeLayout>
+              <Catalogue />
+            </HomeLayout>
+          </Suspense>
+        }
+      />
+      <Route
+        path="/catalogue/:productId"
+        element={
+          <Suspense fallback={<PageLoading />}>
+            <HomeLayout>
+              <DetailCatalogue />
+            </HomeLayout>
+          </Suspense>
+        }
+      />
+    </Routes>
+  );
+};
 
 function App() {
   return (
-    <>
-      <AuthContextProvider>
-        <BrowserRouter>
-          <Suspense fallback={<PageLoading />}>
-            <Routes>
-              <Route path="*" element={<Page404 />} />
-              <Route path="/auth/login" element={<Login />} />
-              <Route path="/auth/register" element={<Register />} />
-              <Route path="/auth/forgot-pass" element={<ForgotPassword />} />
-              <Route path="/auth/resetPassword" element={<UpdatePassword />} />
-              <Route path="/auth/success" element={<SuccessPass />} />
-              <Route
-                path="/profile"
-                element={
-                  <HomeLayout>
-                    <Profile />
-                  </HomeLayout>
-                }
-              />
-              <Route
-                path="/"
-                element={
-                  <HomeLayout>
-                    <Home />
-                  </HomeLayout>
-                }
-              />
-              <Route
-                path="/catalogue"
-                element={
-                  <HomeLayout>
-                    <Catalogue />
-                  </HomeLayout>
-                }
-              />
-              <Route
-                path="/catalogue/:productId"
-                element={
-                  <HomeLayout>
-                    <DetailCatalogue />
-                  </HomeLayout>
-                }
-              />
-            </Routes>
-          </Suspense>
-        </BrowserRouter>
-      </AuthContextProvider>
-    </>
+    <AuthContextProvider>
+      <BrowserRouter>
+        <Suspense fallback={<PageLoading />}>
+          <AppContent />
+        </Suspense>
+      </BrowserRouter>
+    </AuthContextProvider>
   );
 }
 
