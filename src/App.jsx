@@ -11,6 +11,7 @@ import Page404 from "./components/organisms/Page404.jsx";
 import PageLoading from "./components/organisms/PageLoading.jsx";
 import Home from "./pages/home/Home.jsx";
 import Catalogue from "./pages/catalogue/Catalogue.jsx";
+import Cart from "./pages/cart/Cart.jsx";
 import DetailCatalogue from "./pages/catalogue/DetailCatalogue.jsx";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { AuthContextProvider } from "./context/AuthContext.jsx";
@@ -58,6 +59,14 @@ function App() {
                 element={
                   <HomeLayout>
                     <DetailCatalogue />
+                  </HomeLayout>
+                }
+              />
+              <Route
+                path="/cart"
+                element={
+                  <HomeLayout>
+                    <Cart />
                   </HomeLayout>
                 }
               />
