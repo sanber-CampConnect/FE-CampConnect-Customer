@@ -30,6 +30,10 @@ const Catalogue = React.lazy(() => import("./pages/catalogue/Catalogue.jsx"));
 const DetailCatalogue = React.lazy(() =>
   import("./pages/catalogue/DetailCatalogue.jsx")
 );
+const Cart = React.lazy(() =>
+  import("./pages/cart/Cart.jsx")
+);
+
 
 // handle token not found error
 const ProtectedRoute = ({ children }) => {
@@ -176,6 +180,16 @@ const AppContent = () => {
           <Suspense fallback={<PageLoading />}>
             <HomeLayout>
               <DetailCatalogue />
+            </HomeLayout>
+          </Suspense>
+        }
+      />
+      <Route
+        path="/cart"
+        element={
+          <Suspense fallback={<PageLoading />}>
+            <HomeLayout>
+              <Cart/>
             </HomeLayout>
           </Suspense>
         }
