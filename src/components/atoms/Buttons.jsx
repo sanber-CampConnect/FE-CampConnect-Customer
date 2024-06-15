@@ -10,10 +10,11 @@ const PrimaryButton = ({ text, className, type, onClick }) => {
   );
 };
 
-const OutlineButton = ({ text, className }) => {
+const OutlineButton = ({ text, className, onClick }) => {
   return (
     <button
-      className={`border border-secondary text-black rounded-3xl px-4 py-2 ${className}`}
+      className={`border text-black rounded-3xl px-4 py-2 ${className}`}
+      onClick={onClick}
     >
       {text}
     </button>

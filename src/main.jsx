@@ -7,8 +7,6 @@ import "./index.css";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AuthContextProvider>
-      {" "}
-      {/* Perbaiki nama di sini */}
       <App />
     </AuthContextProvider>
   </React.StrictMode>
