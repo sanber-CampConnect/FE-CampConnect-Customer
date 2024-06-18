@@ -197,7 +197,6 @@ const Profile = () => {
   };
 
   const handleSetImage = (imageData) => {
-    // console.log("Image set for cropping:", imageData);
     setCurrentImage(imageData);
     setIsChangePictureOpen(false);
     setIsCropOpen(true);
@@ -395,7 +394,6 @@ const Profile = () => {
 
       {/* Popups */}
       <PopUpChangePicture
-        photoProfile={dataPhotoProfile}
         user={data}
         isOpen={isChangePictureOpen}
         onClose={handleCloseChangePicture}

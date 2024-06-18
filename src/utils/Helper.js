@@ -10,7 +10,7 @@ export const formatRupiah = (money) => {
   }
 };
 
-export const truncateDescription = (description, charLimit = 135) => {
+export const truncateDescription = (description, charLimit = 85) => {
   if (description.length > charLimit) {
     return description.substring(0, charLimit) + "...";
   }

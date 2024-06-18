@@ -1,16 +1,60 @@
 import { useLocation } from "react-router-dom";
 import { numberWithCommas } from "../../utils/Helper";
-import { useState } from "react";
-import { Button, InputNumber } from "antd";
+import { useState, useEffect } from "react";
+import { Button, InputNumber, Spin } from "antd";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { PrimaryButton } from "../../components/atoms/Buttons";
 import { Footer } from "../../components/organisms/Footer";
+import { getDetailProduct, getMediaProduct } from "../../services/api";
+import { PlaceholderProduct } from "../../assets/images";
 
 const DetailCatalogue = () => {
   const location = useLocation();
   const { product } = location.state;
   const [rentalDuration, setRentalDuration] = useState(1);
   const [totalQuantity, setTotalQuantity] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(null);
+  const [photoUrl, setPhotoUrl] = useState(PlaceholderProduct);
+
+  // reset scroll
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    getDataDetailProduct();
+  }, [product.id]);
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      if (data && data.image && data.image.trim() !== "") {
+        try {
+          const imageUrl = await getMediaProduct(data.image);
+          setPhotoUrl(imageUrl);
+        } catch (error) {
+          console.error("Error fetching image:", error);
+        }
+      }
+    };
+
+    fetchImage();
+  }, [data]);
+
+  const getDataDetailProduct = () => {
+    setLoading(true);
+    getDetailProduct(product.id)
+      .then((res) => {
+        console.log(res.data.data[0]);
+        setData(res.data.data[0]);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   const incrementRentalDuration = () => {
     if (rentalDuration !== 7) {
@@ -33,32 +77,40 @@ const DetailCatalogue = () => {
     }
   };
 
+  if (loading || !data) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex flex-col justify-center mx-4">
         <div className="flex flex-row text-md text-neutral justify-end gap-2 mb-4 xl:hidden">
           <p>Kategori:</p>
-          <p>{product.product_category}</p>
+          <p>{data.category_name}</p>
         </div>
         <div className="xl:flex xl:flex-row xl:justify-start xl:gap-12">
           <div className="flex justify-center xl:justify-start xl:w-fit">
             <img
-              className="rounded-[8px] xl:w-96 xl:h-fit"
-              src={product.image}
-              alt={product.product_name}
+              className="rounded-xl xl:w-96 xl:h-fit"
+              src={photoUrl}
+              alt={data.name}
             />
           </div>
           <div className="flex flex-row xl:flex-col justify-between xl:justify-between gap-6 items-center xl:items-start my-6 xl:max-h-96">
             <div className="xl:flex xl:flex-col xl:gap-1">
               <h4 className="text-lg font-medium text-justify xl:text-2xl">
-                {product.product_name}
+                {data.name}
               </h4>
               <p className="text-[#FF432A] font-semibold text-lg">
-                Rp{numberWithCommas(product.price)}
+                Rp{numberWithCommas(parseInt(data.price))}
               </p>
-              <p className="hidden xl:flex xl:text-[#808080]">
+              {/* <p className="hidden xl:flex xl:text-[#808080]">
                 Stok: {product.stock}
-              </p>
+              </p> */}
             </div>
             {/* Button Durasi Sewa dan Jumlah Barang */}
             <div className="hidden xl:flex xl:flex-col xl:gap-4 xl:w-full">
@@ -163,7 +215,7 @@ const DetailCatalogue = () => {
           </div>
           <hr></hr>
           <p className="text-justify leading-7 my-2 text-black">
-            {product.description}
+            {data.description}
           </p>
         </div>
         <div className="flex flex-row justify-between items-center mb-6 xl:hidden">
@@ -221,7 +273,7 @@ const DetailCatalogue = () => {
               <InputNumber
                 readOnly
                 min={1}
-                max={product.stock}
+                max={data.stock}
                 value={totalQuantity}
                 style={{
                   width: "40px",
@@ -242,7 +294,7 @@ const DetailCatalogue = () => {
             </div>
           </div>
           <div className="stock flex flex-col w-fit text-[#808080] gap-2 items-center xl:hidden">
-            <p className="">Stok: {product.stock}</p>
+            <p className="">Stok: {data.stock}</p>
             <div className="flex my-2">
               {/* <InputNumber
                 readOnly
