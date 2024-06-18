@@ -7,87 +7,65 @@ import { PrimaryButton, OutlineButton } from "../../components/atoms/Buttons";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useState, useEffect } from "react";
+import { Spin } from "antd";
+import { Footer } from "../../components/organisms/Footer";
+import { getAllProduct } from "../../services/api";
 import {
+  photoProfile,
   heroSectionDesktop,
   heroSectionMobile,
-  Product1,
-  Product2,
-  Product3,
-  Product4,
-  Product5,
-  photoProfile,
-} from "../../assets/images/index";
-import { Footer } from "../../components/organisms/Footer";
-
-const products = [
-  {
-    id: 1,
-    product_name: "Tenda 2L Kap. 4-5P Naturhike",
-    image: Product1,
-    description: "Tenda yang kokoh dan nyaman untuk 4-5 orang.",
-    link: "#",
-  },
-  {
-    id: 2,
-    product_name: "Tenda 2L Kap. 6-7P Forester",
-    image: Product2,
-    description: "Tenda luas untuk 6-7 orang.",
-    link: "#",
-  },
-  {
-    id: 3,
-    product_name: "Headlamp",
-    image: Product3,
-    description: "Lampu kepala dengan pencahayaan terang.",
-    link: "#",
-  },
-  {
-    id: 4,
-    product_name: "Lampu Tenda Bakpao",
-    image: Product4,
-    description: "Lampu tenda yang hemat energi.",
-    link: "#",
-  },
-  {
-    id: 5,
-    product_name: "Tenda 2L Kap. 4-5P Borneo",
-    image: Product5,
-    description: "Tenda yang cocok untuk keluarga kecil.",
-    link: "#",
-  },
-  {
-    id: 6,
-    product_name: "Tenda EXL CHANODOUG KAP. 12 P",
-    image: Product5,
-    description: "Tenda besar untuk 12 orang.",
-    link: "#",
-  },
-];
+} from "../../assets/images";
 
 const reviews = [
   {
     id: 1,
-    name: "John Carter",
-    title: "Head of Marketing",
-    subtext: "“An amazing service”",
+    name: "Mau_Lana",
+    title: "Local Guide",
     image: photoProfile,
-    text: "Lorem ipsum dolor sit ametolil col consectetur adipiscing lectus a nunc auris scelerisque sed egestas.",
+    text: "barangnya baru semua berkualitas gak nyesel pokoknya nyewa di kade outdoor ,harganya juga standar,nyesel saya min harus pulang gara²temen wkwkw trimss:).",
   },
   {
     id: 2,
-    name: "Jane Doe",
-    title: "Manajer Produk",
-    subtext: "“An amazing service”",
+    name: "Arief Zainullah",
+    title: "Local Guide",
     image: photoProfile,
-    text: "Lorem ipsum dolor sit ametolil col consectetur adipiscing lectus a nunc auris scelerisque sed egestas.",
+    text: "Oke sih, murah dan lumayan lengkap",
   },
   {
     id: 3,
-    name: "Sam Smith",
-    title: "CEO",
-    subtext: "“An amazing service”",
+    name: "King Production",
+    title: "Local Guide",
     image: photoProfile,
-    text: "Lorem ipsum dolor sit ametolil col consectetur adipiscing lectus a nunc auris scelerisque sed egestas.",
+    text: "Harga standar, lokasi termasuk hidden gem sih ini. Yang paling saya suka, barang2nya lengkap dan baru2, jadi gk ada yg buluk.. secara saya rental alat niat nya memang buat kebutuhan berkonten jadi ya paling suka perabotannya lengkap, bersih dan baru.",
+  },
+  {
+    id: 4,
+    name: "Adam Syabana",
+    title: "Local Guide",
+    image: photoProfile,
+    text: "recommend banget buat kalian yg suka dengan kegiatan outdoor apa yg kalian butuhkan pasti mereka ada, sekut!",
+  },
+  {
+    id: 5,
+    name: "nurlaili . ira",
+    title: "Local Guide",
+    image: photoProfile,
+    text: "top pelayanan ramah barang lengkap dan murce. sukses terosss",
+  },
+  {
+    id: 6,
+    name: "aliefia widyas",
+    title: "Local Guide",
+    image: photoProfile,
+    text: "Pertama kali sewa alat camping disini, kemarin sewa 2 sandal gunung. Overall pelayanan baik sekali, tempat sewa bersih dan nyaman, no ribet krn bisa tf dan minta di keep in dulu via WhatsApp, barang siap dipakai (bersih), admin fastresp. Sukse selalu Kade Outdoor!",
+  },
+  {
+    id: 7,
+    name: "Ahmd doc",
+    title: "Local Guide",
+    image: photoProfile,
+    text: "Tempatnya masuk gang, tapi mudah dicari, kebutuhan camping cukup lengkap disini, pelayanan juga ramah, top!",
   },
 ];
 
@@ -114,9 +92,46 @@ const PrevArrow = ({ onClick }) => {
 };
 
 const Home = () => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getDataProduct();
+  }, []);
+
+  const getDataProduct = () => {
+    setLoading(true);
+    getAllProduct()
+      .then((res) => {
+        setData(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        throw new Error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  // Mengurutkan produk terbaru
+  const sortedData = [...data].sort(
+    (a, b) => new Date(b.date_added) - new Date(a.date_added)
+  );
+  const latestProducts = sortedData.slice(0, 8);
+
+  if (loading || !data) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
   const settings = {
     dots: true,
-    infinite: true,
+    infinite: false,
+    variableWidth: false,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
@@ -129,7 +144,7 @@ const Home = () => {
         settings: {
           slidesToShow: 4,
           slidesToScroll: 1,
-          infinite: true,
+          infinite: false,
           dots: true,
           nextArrow: <NextArrow className="hidden xl:block" />,
           prevArrow: <PrevArrow className="hidden xl:block" />,
@@ -140,6 +155,7 @@ const Home = () => {
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
+          infinite: false,
         },
       },
     ],
@@ -197,7 +213,7 @@ const Home = () => {
           />
         </div>
         <div className="text-center pt-10">
-          <h1 className="font-bold text-primary text-2xl">Produk Terpopuler</h1>
+          <h1 className="font-bold text-primary text-2xl">Produk Terbaru</h1>
           <p className="text-md mt-5 w-96 xl:w-[35rem] text-neutral">
             Kami selalu menyediakan peralataan outdoor terbaik untuk menunjang
             pengalaman konsumen ketika berpetualang
@@ -205,8 +221,8 @@ const Home = () => {
         </div>
         <div className="w-96 xl:w-[55rem] full xl:mt-12">
           <Slider {...settings}>
-            {products.map((product) => (
-              <div key={product.id} className="px-44 xl:px-2">
+            {latestProducts.map((product) => (
+              <div key={product.id}>
                 <PopularProduct product={product} />
               </div>
             ))}
@@ -224,10 +240,10 @@ const Home = () => {
             Kami memberikan pelayanan terbaik kepada pelanggan setia kami
           </p>
         </div>
-        <div className="w-96 pt-10 xl:w-[55rem]">
+        <div className="w-96 pt-10 xl:w-full">
           <Slider {...settings}>
             {reviews.map((review) => (
-              <div key={review.id} className="px-44 xl:px-52 ">
+              <div key={review.id} className="flex flex-col items-center">
                 <ReviewUser review={review} />
               </div>
             ))}
@@ -250,8 +266,8 @@ const Home = () => {
         </div>
         <div className="w-96 xl:hidden">
           <Slider {...settings}>
-            {products.map((product) => (
-              <div key={product.id} className="px-44 ">
+            {data.map((product) => (
+              <div key={product.id}>
                 <PopularProduct product={product} />
               </div>
             ))}
@@ -262,7 +278,7 @@ const Home = () => {
           className="mt-16 w-full h-14  xl:hidden"
         />
         <div className="xl:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 hidden ">
-          {products.map((product) => (
+          {data.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

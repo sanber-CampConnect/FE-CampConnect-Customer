@@ -1,57 +1,61 @@
 import { Input, Tabs } from "antd";
 import { useState, useEffect } from "react";
-import { Product6, Product7, Product8 } from "../../assets/images";
 import ProductCardMobile from "../../components/organisms/ProductCardMobile";
 import { Footer } from "../../components/organisms/Footer";
 import { ProductCard } from "../../components/atoms/Card";
+import { getAllProduct, getProductCategories } from "../../services/api";
 
 const { Search } = Input;
 
 const Catalogue = () => {
-  const [activeTab, setActiveTab] = useState("1");
+  const [activeTab, setActiveTab] = useState("0");
   const [isScrolled, setIsScrolled] = useState(false);
-  const [data, setData] = useState([
-    {
-      id: 1,
-      product_name: "Tenda EXL Chanodug Kap. 12P",
-      product_category: "Tenda",
-      price: "90000",
-      product_type: ["Tenda EXL"],
-      stock: "10",
-      image: Product6,
-      description:
-        "Tenda adalah tempat pelindung yang terdiri dari lembaran kain atau bahan lainnya menutupi yang melekat pada kerangka tiang atau menempel pada tali pendukung. Beberapa tenda tidak perlu berdiri di atas tanah karena ada beberapa model tenda yang menggantung di pohon.",
-    },
-    {
-      id: 2,
-      product_name: "Sepatu Gunung",
-      product_category: "Perlengkapan Pribadi",
-      product_type: ["31", "32", "33"],
-      price: "20000",
-      image: Product7,
-      stock: "1",
-      description:
-        "Sepatu adalah salah satu jenis alas kaki (footwear) yang biasanya terdiri atas bagian-bagian sol, hak, kap, tali, dan lidah.",
-    },
-    {
-      id: 3,
-      product_name: "Tracking Pole",
-      product_category: "Perlengkapan Pribadi",
-      product_type: ["10", "11", "12"],
-      price: "100000",
-      image: Product8,
-      stock: "10",
-      description:
-        "Alat ini sangat berguna selama hiking atau dijalanan menanjak, dimana beban kaki bisa kita bagi ke tracking pole melalui tumpuan tangan. Sehingga membantu mengurangi resiko cedera otot kaki dan terkilir/keseleo.",
-    },
-  ]);
-  const [filteredData, setFilteredData] = useState(data);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const [category, setCategory] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+
+  useEffect(() => {
+    getDataProduct();
+    getCategory();
+  }, []);
+
+  const getDataProduct = () => {
+    setLoading(true);
+    getAllProduct()
+      .then((res) => {
+        setData(res.data.data);
+        setFilteredData(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        throw new Error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const getCategory = () => {
+    setLoading(true);
+    getProductCategories()
+      .then((res) => {
+        setCategory(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        throw new Error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   const onSearch = (value) => {
     const filtered = data.filter(
       (item) =>
-        item.product_name.toLowerCase().includes(value.toLowerCase()) ||
-        item.product_category.toLowerCase().includes(value.toLowerCase())
+        item.name.toLowerCase().includes(value.toLowerCase()) ||
+        item.category_name.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredData(filtered);
   };
@@ -77,11 +81,16 @@ const Catalogue = () => {
       setFilteredData(data);
     } else {
       const filteredByCategory = data.filter(
-        (item) => item.product_category === key
+        (item) => item.category_id.toString() === key
       );
       setFilteredData(filteredByCategory);
     }
   };
+
+  const tabItems = [
+    { label: "Semua", key: "0" },
+    ...category.map((cat) => ({ label: cat.name, key: cat.id.toString() })),
+  ];
 
   return (
     <>
@@ -98,40 +107,11 @@ const Catalogue = () => {
         />
         <div className="mt-4">
           <Tabs
-            defaultActiveKey="1"
+            defaultActiveKey="0"
             size="large"
             onChange={handleTabChange}
             style={{ marginBottom: 8 }}
-            items={[
-              {
-                label: "Semua",
-                key: "0",
-              },
-              {
-                label: "Tenda",
-                key: "Tenda",
-              },
-              {
-                label: "Alat Masak",
-                key: "Alat Masak",
-              },
-              {
-                label: "Alat Tidur",
-                key: "Alat Tidur",
-              },
-              {
-                label: "Penerangan",
-                key: "Penerangan",
-              },
-              {
-                label: "Perlengkapan Pribadi",
-                key: "Perlengkapan Pribadi",
-              },
-              {
-                label: "Lainnya",
-                key: "Lainnya",
-              },
-            ]}
+            items={tabItems}
           />
         </div>
       </div>

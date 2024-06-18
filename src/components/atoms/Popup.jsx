@@ -6,7 +6,6 @@ import { getCroppedImg } from "../../utils/cropPhotoProfile";
 import { photoProfile } from "../../assets/images";
 
 export const PopUpChangePicture = ({
-  photoProfile,
   user,
   isOpen,
   onClose,
@@ -35,7 +34,11 @@ export const PopUpChangePicture = ({
     >
       <div className="flex flex-col gap-3 items-center justify-center">
         <img
-          src={user && (user.image.trim() !== "" ? photoProfile : photoProfile)}
+          src={
+            user && user.image && user.image.trim() !== ""
+              ? user.image
+              : photoProfile
+          }
           alt={user && user.username}
           className="w-24 h-24"
           style={{

@@ -10,6 +10,7 @@ import Product5 from "./Product_5.png";
 import Product6 from "./Product_6.png";
 import Product7 from "./Product_7.png";
 import Product8 from "./Product_8.png";
+import PlaceholderProduct from "./placeholder-product.jpg.webp";
 
 export {
   heroSectionDesktop,
@@ -24,4 +25,5 @@ export {
   Product6,
   Product7,
   Product8,
+  PlaceholderProduct,
 };

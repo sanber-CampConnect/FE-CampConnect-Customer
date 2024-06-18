@@ -79,6 +79,19 @@ export const requestEmailVerification = async (email) => {
   });
 };
 
+export const verifyAccount = async (tokenEmail) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+  const url = `${API_URL}/auth/verifyAccount?token=${tokenEmail}`;
+  return await get(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 export const editProfile = async (params) => {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -116,7 +129,39 @@ export const resetPassword = async (token, params) => {
   return await api.post(url, params);
 };
 
+/* =================================================== Catalogue ========================================================== */
+
+export const getAllProduct = async () => {
+  const url = `${API_URL}/products`;
+  return await get(url);
+};
+
+export const getProductCategories = async () => {
+  const url = `${API_URL}/categories`;
+  return await get(url);
+};
+
+export const getDetailProduct = async (id) => {
+  const url = `${API_URL}/products/${id}`;
+  return await get(url);
+};
+
 /* =================================================== GET MEDIA IMAGE ========================================================== */
 export const getMediaUser = (media) => {
   return `${API_URL}/assets/${media}`;
+};
+
+export const getMediaProduct = async (media) => {
+  const url = `${API_URL}/assets/${media}`;
+  try {
+    const response = await axios.get(url, {
+      responseType: "blob",
+    });
+    return URL.createObjectURL(response.data);
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return null;
+    }
+    throw error;
+  }
 };

@@ -21,4 +21,17 @@ const OutlineButton = ({ text, className, onClick }) => {
   );
 };
 
-export { PrimaryButton, OutlineButton };
+const TextButton = ({ text, className, onClick }) => {
+  return (
+    <div className=" flex justify-end">
+      <button
+        className={`text-[#8D8BA7] font-semibold text-base w-[100px] text-right ${className}`}
+        onClick={onClick}
+      >
+        {text}
+      </button>
+    </div>
+  );
+};
+
+export { PrimaryButton, OutlineButton, TextButton };
