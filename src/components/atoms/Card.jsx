@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { TextButton } from "./Buttons";
 
 const PopularProduct = ({ product }) => {
+  console.log(product);
   const [photoProduct, setPhotoProduct] = useState(null);
 
   useEffect(() => {
@@ -28,7 +29,6 @@ const PopularProduct = ({ product }) => {
     fetchImage();
   }, [product]);
 
-  console.log(product);
   return (
     <div className="rounded-3xl border border-primary text-center m-4 xl:w-48 w-44 h-52 overflow-hidden relative flex flex-col">
       <div className="relative h-48 overflow-hidden">
@@ -47,7 +47,7 @@ const PopularProduct = ({ product }) => {
 
 const ReviewUser = ({ review }) => {
   return (
-    <div className="border border-[#D4D2E3] shadow text-black rounded-3xl p-4 xl:p-6 text-justify h-[150px] w-44 xl:h-44 justify-center m-4 overflow-hidden">
+    <div className="border border-[#D4D2E3] shadow text-black rounded-3xl p-4 xl:p-6 text-justify h-[150px] w-44 xl:w-72 xl:h-44 justify-center m-4 overflow-hidden">
       <div className="flex items-center mb-4">
         <img
           src={review.image}
@@ -67,6 +67,7 @@ const ReviewUser = ({ review }) => {
 };
 
 const ProductCard = ({ product }) => {
+  // console.log(product);
   const [photoProduct, setPhotoProduct] = useState(null);
   const navigate = useNavigate();
 

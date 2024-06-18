@@ -1,11 +1,5 @@
 import "./App.scss";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  useNavigate,
-  Outlet,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import React, { Suspense, useEffect, useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { AuthContextProvider } from "./context/AuthContext.jsx";
@@ -30,10 +24,8 @@ const Catalogue = React.lazy(() => import("./pages/catalogue/Catalogue.jsx"));
 const DetailCatalogue = React.lazy(() =>
   import("./pages/catalogue/DetailCatalogue.jsx")
 );
-const Cart = React.lazy(() =>
-  import("./pages/cart/Cart.jsx")
-);
-
+const Cart = React.lazy(() => import("./pages/cart/Cart.jsx"));
+const Payment = React.lazy(() => import("./pages/payment/Payment.jsx"));
 
 // handle token not found error
 const ProtectedRoute = ({ children }) => {
@@ -155,6 +147,18 @@ const AppContent = () => {
         }
       />
       <Route
+        path="/payment"
+        element={
+          <ProtectedRoute>
+            <Suspense fallback={<PageLoading />}>
+              <HomeLayout>
+                <Payment />
+              </HomeLayout>
+            </Suspense>
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/"
         element={
           <Suspense fallback={<PageLoading />}>
@@ -189,7 +193,7 @@ const AppContent = () => {
         element={
           <Suspense fallback={<PageLoading />}>
             <HomeLayout>
-              <Cart/>
+              <Cart />
             </HomeLayout>
           </Suspense>
         }

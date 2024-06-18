@@ -7,6 +7,7 @@ import { PrimaryButton } from "../../components/atoms/Buttons";
 import { Footer } from "../../components/organisms/Footer";
 import { getDetailProduct, getMediaProduct } from "../../services/api";
 import { PlaceholderProduct } from "../../assets/images";
+import { VariantSelector } from "../../components/atoms/Variant";
 
 const DetailCatalogue = () => {
   const location = useLocation();
@@ -16,6 +17,8 @@ const DetailCatalogue = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
   const [photoUrl, setPhotoUrl] = useState(PlaceholderProduct);
+  const [selectedVariant, setSelectedVariant] = useState(null);
+  const [variantStock, setVariantStock] = useState(null);
 
   // reset scroll
   useEffect(() => {
@@ -45,8 +48,13 @@ const DetailCatalogue = () => {
     setLoading(true);
     getDetailProduct(product.id)
       .then((res) => {
-        console.log(res.data.data[0]);
-        setData(res.data.data[0]);
+        console.log(res.data.data);
+        setData(res.data.data);
+        if (res.data.data.variants && res.data.data.variants.length > 0) {
+          const defaultVariant = res.data.data.variants[0];
+          setSelectedVariant(defaultVariant);
+          setVariantStock(defaultVariant.stock);
+        }
       })
       .catch((err) => {
         throw new Error(err);
@@ -75,6 +83,11 @@ const DetailCatalogue = () => {
     if (totalQuantity !== 1) {
       setTotalQuantity(totalQuantity - 1);
     }
+  };
+
+  const handleVariantSelect = (variant) => {
+    setSelectedVariant(variant);
+    setVariantStock(variant.stock);
   };
 
   if (loading || !data) {
@@ -112,6 +125,15 @@ const DetailCatalogue = () => {
                 Stok: {product.stock}
               </p> */}
             </div>
+
+            <div className="flex flex-col gap-2">
+              <VariantSelector
+                variants={data.variants}
+                onVariantSelect={handleVariantSelect}
+              />
+              <p className="">Stok: {variantStock}</p>
+            </div>
+
             {/* Button Durasi Sewa dan Jumlah Barang */}
             <div className="hidden xl:flex xl:flex-col xl:gap-4 xl:w-full">
               <div className="hidden xl:flex xl:flex-row xl:gap-8">
@@ -205,7 +227,7 @@ const DetailCatalogue = () => {
             </div>
           </div>
         </div>
-        <div className="w-fit text-primary text-md mb-4 xl:my-12">
+        <div className="w-full text-primary text-md mb-4 xl:my-12">
           <div className="flex flex-row gap-1">
             <p className="mb-1 font-semibold">Deskripsi:</p>
             <i

@@ -124,7 +124,7 @@ const Catalogue = () => {
       </div>
 
       {/* Product Card tampilan Desktop */}
-      <div className="hidden xl:grid xl:grid-cols-3 xl:gap-0 xl:my-6 xl:place-items-center">
+      <div className="hidden xl:grid xl:grid-cols-3 xl:gap-y-12 xl:my-6 xl:place-items-center">
         {filteredData.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

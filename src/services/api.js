@@ -137,6 +137,10 @@ export const getAllProduct = async () => {
 };
 
 export const getProductCategories = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
   const url = `${API_URL}/categories`;
   return await get(url);
 };
