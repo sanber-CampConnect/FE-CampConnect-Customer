@@ -34,4 +34,14 @@ const TextButton = ({ text, className, onClick }) => {
   );
 };
 
-export { PrimaryButton, OutlineButton, TextButton };
+const BackButton = ({ onClick, className }) => {
+  return (
+    <div className="rounded-full bg-white shadow-md flex w-9 h-9 items-center justify-center">
+      <button className={`font-semibold ${className}`} onClick={onClick}>
+        <i className="bi bi-arrow-left text-lg"></i>
+      </button>
+    </div>
+  );
+};
+
+export { PrimaryButton, OutlineButton, TextButton, BackButton };

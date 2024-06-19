@@ -119,6 +119,7 @@ const Home = () => {
     (a, b) => new Date(b.date_added) - new Date(a.date_added)
   );
   const latestProducts = sortedData.slice(0, 8);
+  const limitedProducts = data.slice(0, 6);
 
   if (loading || !data) {
     return (
@@ -190,7 +191,7 @@ const Home = () => {
             <img
               src={heroSectionDesktop}
               alt="img-gunung"
-              className="rounded-tl-3xl rounded-tr-3xl hidden xl:block"
+              className="rounded-3xl hidden xl:block"
             />
           </div>
           <p className="text-neutral text-md pt-5 xl:hidden">
@@ -200,7 +201,7 @@ const Home = () => {
             <img
               src={heroSectionMobile}
               alt="img-gunung"
-              className="rounded-tl-3xl rounded-tr-3xl xl:hidden"
+              className="rounded-3xl xl:hidden"
             />
           </div>
           <PrimaryButton
@@ -213,7 +214,9 @@ const Home = () => {
           />
         </div>
         <div className="text-center pt-10">
-          <h1 className="font-bold text-primary text-2xl">Produk Terbaru</h1>
+          <h1 className="font-bold text-primary text-2xl mt-16">
+            Produk Terbaru
+          </h1>
           <p className="text-md mt-5 w-96 xl:w-[35rem] text-neutral">
             Kami selalu menyediakan peralataan outdoor terbaik untuk menunjang
             pengalaman konsumen ketika berpetualang
@@ -232,7 +235,7 @@ const Home = () => {
           text="Selengkapnya"
           className="mt-16 w-full h-14  xl:w-40 xl:"
         />
-        <div className="text-center pt-10 xl:pt-20">
+        <div className="text-center pt-10 xl:pt-20 mt-16">
           <h1 className="font-bold text-secondary text-2xl">
             Testimoni Pelanggan
           </h1>
@@ -249,16 +252,16 @@ const Home = () => {
             ))}
           </Slider>
         </div>
-        <div className="text-center pt-12">
+        <div className="text-center pt-12 mt-16">
           <h1 className="font-bold text-primary text-2xl">Produk Kami</h1>
-          <div className="flex justify-center items-center pt-5 gap-5">
+          {/* <div className="flex justify-center items-center pt-5 gap-5">
             <input
               type="text"
               placeholder="Cari"
               className="w-full max-w-md p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-secondary text-left xl:max-w-full "
             />
             <PrimaryButton text="Filter" className=" w-24" />
-          </div>
+          </div> */}
           <p className="text-md pt-10 text-neutral mb-5 xl:mb-0">
             Peralatan outdoor dengan standar yang baik menjadi fokus kami,
             karena keselamatan dan kenyamanan adalah faktor penting
@@ -266,7 +269,7 @@ const Home = () => {
         </div>
         <div className="w-96 xl:hidden">
           <Slider {...settings}>
-            {data.map((product) => (
+            {limitedProducts.map((product) => (
               <div key={product.id}>
                 <PopularProduct product={product} />
               </div>
@@ -278,7 +281,7 @@ const Home = () => {
           className="mt-16 w-full h-14  xl:hidden"
         />
         <div className="xl:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 hidden ">
-          {data.map((product) => (
+          {limitedProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

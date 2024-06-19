@@ -7,6 +7,7 @@ import { PrimaryButton } from "../../components/atoms/Buttons";
 import { Footer } from "../../components/organisms/Footer";
 import { getDetailProduct, getMediaProduct } from "../../services/api";
 import { PlaceholderProduct } from "../../assets/images";
+import { VariantSelector } from "../../components/atoms/Variant";
 
 const DetailCatalogue = () => {
   const location = useLocation();
@@ -16,6 +17,8 @@ const DetailCatalogue = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
   const [photoUrl, setPhotoUrl] = useState(PlaceholderProduct);
+  const [selectedVariant, setSelectedVariant] = useState(null);
+  const [variantStock, setVariantStock] = useState(null);
 
   // reset scroll
   useEffect(() => {
@@ -47,6 +50,13 @@ const DetailCatalogue = () => {
       .then((res) => {
         console.log(res.data.data[0]);
         setData(res.data.data[0]);
+        console.log(res.data.data);
+        setData(res.data.data);
+        if (res.data.data.variants && res.data.data.variants.length > 0) {
+          const defaultVariant = res.data.data.variants[0];
+          setSelectedVariant(defaultVariant);
+          setVariantStock(defaultVariant.stock);
+        }
       })
       .catch((err) => {
         throw new Error(err);
@@ -62,7 +72,7 @@ const DetailCatalogue = () => {
     }
   };
   const incrementTotalQuantity = () => {
-    if (totalQuantity < product.stock) {
+    if (totalQuantity < variantStock) {
       setTotalQuantity(totalQuantity + 1);
     }
   };
@@ -75,6 +85,12 @@ const DetailCatalogue = () => {
     if (totalQuantity !== 1) {
       setTotalQuantity(totalQuantity - 1);
     }
+  };
+
+  const handleVariantSelect = (variant) => {
+    setSelectedVariant(variant);
+    setVariantStock(variant.stock);
+    console.log(selectedVariant);
   };
 
   if (loading || !data) {
@@ -108,9 +124,13 @@ const DetailCatalogue = () => {
               <p className="text-[#FF432A] font-semibold text-lg">
                 Rp{numberWithCommas(parseInt(data.price))}
               </p>
-              {/* <p className="hidden xl:flex xl:text-[#808080]">
-                Stok: {product.stock}
-              </p> */}
+            </div>
+            <div className="flex flex-col gap-2">
+              <VariantSelector
+                variants={data.variants}
+                onVariantSelect={handleVariantSelect}
+              />
+              <p className="text-end xl:text-start">Stok: {variantStock}</p>
             </div>
             {/* Button Durasi Sewa dan Jumlah Barang */}
             <div className="hidden xl:flex xl:flex-col xl:gap-4 xl:w-full">
@@ -175,7 +195,7 @@ const DetailCatalogue = () => {
                     <InputNumber
                       readOnly
                       min={1}
-                      max={product.stock}
+                      max={variantStock}
                       value={totalQuantity}
                       style={{
                         width: "40px",
@@ -205,7 +225,7 @@ const DetailCatalogue = () => {
             </div>
           </div>
         </div>
-        <div className="w-fit text-primary text-md mb-4 xl:my-12">
+        <div className="w-full text-primary text-md mb-4 xl:my-12">
           <div className="flex flex-row gap-1">
             <p className="mb-1 font-semibold">Deskripsi:</p>
             <i
@@ -218,7 +238,7 @@ const DetailCatalogue = () => {
             {data.description}
           </p>
         </div>
-        <div className="flex flex-row justify-between items-center mb-6 xl:hidden">
+        <div className="flex flex-row xl:justify-between justify-start gap-4 items-center mb-6 xl:hidden">
           <div className="rental-duration flex flex-col w-fit">
             <p className="text-neutral text-md">Durasi Sewa</p>
             <div className="flex flex-row my-3">
@@ -291,19 +311,6 @@ const DetailCatalogue = () => {
               >
                 <PlusOutlined style={{ color: "#fff", fontSize: "15px" }} />
               </Button>
-            </div>
-          </div>
-          <div className="stock flex flex-col w-fit text-[#808080] gap-2 items-center xl:hidden">
-            <p className="">Stok: {data.stock}</p>
-            <div className="flex my-2">
-              {/* <InputNumber
-                readOnly
-                value={product.stock}
-                style={{
-                  width: "40px",
-                  borderRadius: "0px",
-                }}
-              /> */}
             </div>
           </div>
         </div>

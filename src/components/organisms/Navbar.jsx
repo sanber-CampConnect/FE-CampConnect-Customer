@@ -112,14 +112,14 @@ const Navbar = () => {
                   Order
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="/info"
                   className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
                 >
                   Informasi
                 </a>
-              </li>
+              </li> */}
               {user && (
                 <li>
                   <a
@@ -178,14 +178,14 @@ const Navbar = () => {
                   Order
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="/info"
                   className="block p-2 text-primary rounded hover:text-secondary"
                 >
                   Informasi
                 </a>
-              </li>
+              </li> */}
               {user && (
                 <li>
                   <a
