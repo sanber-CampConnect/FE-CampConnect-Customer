@@ -11,6 +11,9 @@ import Product6 from "./Product_6.png";
 import Product7 from "./Product_7.png";
 import Product8 from "./Product_8.png";
 import PlaceholderProduct from "./placeholder-product.jpg.webp";
+import QRIS from "./QRIS.svg";
+import Cash from "./Cash.svg";
+import LogoBCA from "./logo-bca.webp";
 
 export {
   heroSectionDesktop,
@@ -26,4 +29,7 @@ export {
   Product7,
   Product8,
   PlaceholderProduct,
+  QRIS,
+  Cash,
+  LogoBCA,
 };
