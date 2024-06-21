@@ -63,6 +63,13 @@
   background: white;
 }
 
+.tabs-sticky {
+  position: sticky;
+  top: 50px;
+  background: white;
+  z-index: 2;
+}
+
 .ant-input-number-input {
   text-align: center !important;
 }

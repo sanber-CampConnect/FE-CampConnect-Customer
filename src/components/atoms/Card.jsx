@@ -1,9 +1,11 @@
-import { truncateDescription } from "../../utils/Helper";
+import { numberWithCommas, truncateDescription } from "../../utils/Helper";
 import { useNavigate } from "react-router-dom";
 import { PlaceholderProduct } from "../../assets/images/index";
 import { getMediaProduct } from "../../services/api";
 import { useEffect, useState } from "react";
-import { TextButton } from "./Buttons";
+import { OutlineButton, PrimaryButton, TextButton } from "./Buttons";
+import { Tag, notification, Modal, Radio, Input } from "antd";
+import { OrderProduct } from "../moleculs/OrderProduct";
 
 const PopularProduct = ({ product }) => {
   const [photoProduct, setPhotoProduct] = useState(null);
@@ -119,4 +121,193 @@ const ProductCard = ({ product }) => {
   );
 };
 
-export { PopularProduct, ReviewUser, ProductCard };
+const OrderCardMobile = ({ order }) => {
+  console.log(order);
+  const navigate = useNavigate();
+  const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
+  // const [isReasonModalVisible, setIsReasonModalVisible] = useState(false);
+  // const [selectedReason, setSelectedReason] = useState(null);
+  // const [customReason, setCustomReason] = useState("");
+
+  const productItems = order.orderItems;
+
+  const statusColorMap = {
+    1: "orange",
+    2: "blue",
+    3: "red",
+    4: "green",
+  };
+
+  const statusTextMap = {
+    1: "Belum Bayar",
+    2: "Sedang Disewa",
+    3: "Dibatalkan",
+    4: "Selesai",
+  };
+
+  const statusMap = {
+    belum_bayar: 1,
+    sedang_disewa: 2,
+    dibatalkan: 3,
+    selesai: 4,
+  };
+
+  const orderStatus = statusMap[order.status];
+  const tagColor = statusColorMap[orderStatus];
+  const tagText = statusTextMap[orderStatus];
+
+  const transactionMethodText =
+    order.transaction_method === "transfer" ? "Transfer via BCA" : "Tunai";
+
+  const transactionEvidenceText = order.transaction_evidence_image
+    ? "Sudah Dikirim"
+    : "Belum Dikirim";
+
+  const transactionEvidenceStatusText =
+    order.transaction_evidence_status === null
+      ? "Sedang dicek"
+      : order.transaction_evidence_status
+      ? "Valid"
+      : "Invalid";
+
+  const handleCancel = () => {
+    setIsCancelModalVisible(true);
+  };
+
+  const handleCancelConfirm = () => {
+    setIsCancelModalVisible(false);
+    // setIsReasonModalVisible(true);
+  };
+
+  // const handleReasonSubmit = () => {
+  //   setIsReasonModalVisible(false);
+  //   notification.success({
+  //     message: "Pesanan Dibatalkan",
+  //     description: "Pesanan Anda telah dibatalkan.",
+  //   });
+  // };
+
+  return (
+    <>
+      <div className="flex flex-col justify-center mb-4">
+        <div className="flex justify-end">
+          {orderStatus && <Tag color={tagColor}>{tagText}</Tag>}
+        </div>
+        <div className="">
+          <OrderProduct productItems={productItems} />
+        </div>
+        <div className="my-6 px-2">
+          <div className="flex flex-row justify-between mb-2">
+            <p className="">Jumlah Barang:</p>
+            <p className="font-semibold">{order.transaction_item_count}</p>
+          </div>
+          <div className="flex flex-row justify-between mb-2">
+            <p className="">Total Harga:</p>
+            <p className="font-semibold">
+              Rp{numberWithCommas(order.transaction_total_price)}
+            </p>
+          </div>
+          <div className="flex flex-row justify-between mb-2">
+            <p className="">Metode Pembayaran:</p>
+            <p className="font-semibold">{transactionMethodText}</p>
+          </div>
+          {order.transaction_method === "transfer" && (
+            <>
+              <div className="flex flex-row justify-between mb-2">
+                <p className="">Bukti Pembayaran:</p>
+                <p className="font-semibold">{transactionEvidenceText}</p>
+              </div>
+              <div className="flex flex-row justify-between mb-2">
+                <p className="">Status Konfirmasi Bukti:</p>
+                <p className="font-semibold">{transactionEvidenceStatusText}</p>
+              </div>
+            </>
+          )}
+        </div>
+        <div className="flex flex-row w-full gap-3 mb-4 px-1">
+          {order.status === "belum_bayar" && (
+            <>
+              <OutlineButton
+                text="Batalkan"
+                className="w-full"
+                onClick={handleCancel}
+              />
+              <PrimaryButton
+                text="Bayar"
+                className="w-full"
+                onClick={() => navigate(`/payment/${order.id}`)}
+              />
+            </>
+          )}
+          {order.status === "sedang_disewa" && (
+            <>
+              <PrimaryButton
+                text="Hubungi Admin"
+                className="w-full"
+                onClick={() =>
+                  window.open(
+                    "https://api.whatsapp.com/send/?phone=6282228034763&text&type=phone_number&app_absent=0",
+                    "_blank"
+                  )
+                }
+              />
+            </>
+          )}
+          {(order.status === "dibatalkan" || order.status === "selesai") && (
+            <PrimaryButton
+              text="Sewa Lagi"
+              className="w-full"
+              onClick={() => navigate(`/catalogue`)}
+            />
+          )}
+        </div>
+        <hr className="w-full border-t-2 border-gray-100 opacity-20 mt-12 mb-6 rounded-full -z-50" />
+      </div>
+
+      {/* Notifikasi pembatalan */}
+      <Modal
+        title="Konfirmasi Pembatalan"
+        open={isCancelModalVisible}
+        onOk={handleCancelConfirm}
+        onCancel={() => setIsCancelModalVisible(false)}
+        okText="Iya"
+        cancelText="Tidak"
+      >
+        <p>Apakah anda yakin akan membatalkan pesanan ini?</p>
+      </Modal>
+
+      {/* Notifikasi alasan pembatalan */}
+      {/* <Modal
+        title="Alasan Pembatalan"
+        open={isReasonModalVisible}
+        onOk={handleReasonSubmit}
+        onCancel={() => setIsReasonModalVisible(false)}
+        okText="Kirim"
+        cancelText="Batal"
+      >
+        <div className="flex flex-col">
+          <Radio.Group
+            onChange={(e) => setSelectedReason(e.target.value)}
+            value={selectedReason}
+          >
+            <Radio value="reason1">Alasan 1</Radio>
+            <Radio value="reason2">Alasan 2</Radio>
+            <Radio value="reason3">Alasan 3</Radio>
+            <Radio value="reason4">Alasan Lainnya</Radio>
+          </Radio.Group>
+          {selectedReason === "reason4" && (
+            <Input.TextArea
+              rows={4}
+              value={customReason}
+              onChange={(e) => setCustomReason(e.target.value)}
+              placeholder="Tuliskan alasan pembatalan"
+              className="mt-2"
+            />
+          )}
+        </div>
+      </Modal> */}
+    </>
+  );
+};
+
+export { PopularProduct, ReviewUser, ProductCard, OrderCardMobile };

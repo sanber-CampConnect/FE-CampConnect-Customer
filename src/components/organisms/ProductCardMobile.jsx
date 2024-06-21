@@ -58,7 +58,7 @@ const ProductCardMobile = ({ product }) => {
           onClick={handleDetailClick}
         />
       </div>
-      <hr className="w-full border-t-2 border-gray-100 opacity-20 my-8 rounded-full" />
+      <hr className="w-full border-t-2 border-gray-100 opacity-20 my-8 rounded-full -z-50" />
     </div>
   );
 };

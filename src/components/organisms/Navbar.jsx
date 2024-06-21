@@ -106,7 +106,7 @@ const Navbar = () => {
               </li>
               <li>
                 <a
-                  href="/order"
+                  href="/orders"
                   className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
                 >
                   Order
@@ -172,7 +172,7 @@ const Navbar = () => {
               </li>
               <li>
                 <a
-                  href="/order"
+                  href="/orders"
                   className="block p-2 text-primary rounded hover:text-secondary"
                 >
                   Order
