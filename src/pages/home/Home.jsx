@@ -278,7 +278,7 @@ const Home = () => {
         </div>
         <PrimaryButton
           text="Selengkapnya"
-          className="mt-16 w-full h-14  xl:hidden"
+          className="mt-16 w-full h-14 xl:hidden mb-12"
         />
         <div className="xl:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 hidden ">
           {limitedProducts.map((product) => (

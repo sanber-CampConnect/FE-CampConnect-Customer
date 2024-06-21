@@ -7,25 +7,19 @@ const HomeLayout = ({ children }) => {
   });
 
   useEffect(() => {
-    // Handler to call on window resize
     function handleResize() {
-      // Set window width to state
       setWindowSize({
         width: window.innerWidth,
       });
     }
 
-    // Add event listener
     window.addEventListener("resize", handleResize);
 
-    // Call handler right away so state gets updated with initial window size
     handleResize();
 
-    // Remove event listener on cleanup
     return () => window.removeEventListener("resize", handleResize);
-  }, []); // Empty array ensures that effect is only run on mount
+  }, []);
 
-  // Style object for content div
   const contentStyle = {
     marginLeft: windowSize.width >= 1024 ? "100px" : "20px",
     marginRight: windowSize.width >= 1024 ? "100px" : "20px",
@@ -39,7 +33,7 @@ const HomeLayout = ({ children }) => {
         className="top-navbar"
         style={{
           position: "fixed",
-          zIndex: 1,
+          zIndex: 3,
           width: "100%",
           backgroundColor: "white",
         }}

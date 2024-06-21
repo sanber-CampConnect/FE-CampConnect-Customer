@@ -33,6 +33,7 @@ const DetailCatalogue = React.lazy(() =>
 const Cart = React.lazy(() => import("./pages/cart/Cart.jsx"));
 const Payment = React.lazy(() => import("./pages/payment/Payment.jsx"));
 const PaymentCode = React.lazy(() => import("./pages/payment/PaymentCode.jsx"));
+const Order = React.lazy(() => import("./pages/order/Order.jsx"));
 
 // handle token not found error
 const ProtectedRoute = ({ children }) => {
@@ -172,6 +173,18 @@ const AppContent = () => {
             <Suspense fallback={<PageLoading />}>
               <HomeLayout>
                 <PaymentCode />
+              </HomeLayout>
+            </Suspense>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/orders"
+        element={
+          <ProtectedRoute>
+            <Suspense fallback={<PageLoading />}>
+              <HomeLayout>
+                <Order />
               </HomeLayout>
             </Suspense>
           </ProtectedRoute>
