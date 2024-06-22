@@ -3,7 +3,7 @@ import { Button, InputNumber } from "antd";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { BsTrash } from "react-icons/bs";
 import { numberWithCommas } from "../../utils/Helper";
-import { PrimaryButton } from "../../components/atoms/Buttons";
+import { PrimaryButton, BackButton } from "../../components/atoms/Buttons";
 import Product from "../../assets/images/Product_6.png";
 import { FaArrowLeftLong } from "react-icons/fa6";
 
@@ -230,7 +230,9 @@ const Cart = () => {
             <div className="hidden xl:flex xl:flex-col xl:container xl:mx-auto xl:p-4">
                 <h1 className="text-2xl font-bold mb-6">Keranjang</h1>
                 <div className="flex text-lg gap-2">
-                <FaArrowLeftLong className="h-6 w-6"/> Lanjutkan
+                    <a href="/">
+                <BackButton/>
+                    </a> 
                 </div>
                 <div className="flex flex-col xl:flex-row xl:justify-between">
                     <div className="w-full xl:w-3/4">
@@ -376,7 +378,9 @@ const Cart = () => {
                                 <p>Total Harga:</p>
                                 <p>Rp{numberWithCommas(subtotal + biayaPengiriman)}</p>
                             </div>
+                            <a href="/checkout">
                             <PrimaryButton text="Checkout" className="w-full mt-10" />
+                            </a>  
                         </div>
                     </div>
                 </div>
