@@ -2,7 +2,9 @@ import { Product1 } from "../../assets/images";
 import { numberWithCommas } from "../../utils/Helper";
 
 const OrderProduct = ({ productItems }) => {
-  //   console.log(productItems);
+  if (!productItems || productItems.length === 0) {
+    return <div>Produk Tidak Ditemukan</div>;
+  }
   return (
     <>
       <div className="bg-white shadow-lg flex flex-col mt-4 p-4 rounded-lg w-full gap-6">

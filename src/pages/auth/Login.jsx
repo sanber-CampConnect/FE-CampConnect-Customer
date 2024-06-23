@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { IoEyeSharp } from "react-icons/io5";
 import { FaEyeSlash } from "react-icons/fa";
 import Logo from "../../assets/images/logo.png";
@@ -8,6 +8,7 @@ import ImgPlaceholder from "../../assets/images/placeholder.png";
 import { Link, useNavigate } from "react-router-dom";
 import { authLogin } from "../../services/api";
 import { notification, Spin } from "antd";
+import { AuthContext } from "../../context/AuthContext";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -16,7 +17,7 @@ const Login = () => {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const { dispatch } = useContext(AuthContext);
   const handleChange = (e) => {
     const { id, value, type, checked } = e.target;
     setFormData({
@@ -28,10 +29,11 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log("Received values of form: ", formData);
     authLogin(formData)
       .then((res) => {
         if (res.status === 200) {
+          // console.log(res.data.data);
+          dispatch({ type: "LOGIN", payload: res.data.data });
           notification.success({
             message: "Login Berhasil",
             description: "Kamu berhasil masuk ke dashboard",
@@ -88,7 +90,7 @@ const Login = () => {
           <p className="font-medium text-base mt-3 hidden xl:block">
             If you don’t have an account register
             <br />
-            You can {" "}
+            You can{" "}
             <Link to="/auth/register" className="text-failed hover:underline">
               Register here!
             </Link>
@@ -193,7 +195,10 @@ const Login = () => {
                 If you don’t have an account register
                 <br />
                 You can{" "}
-                <Link to="/auth/register" className="text-[#2D5BFF] hover:underline">
+                <Link
+                  to="/auth/register"
+                  className="text-[#2D5BFF] hover:underline"
+                >
                   Register here!
                 </Link>
               </p>
