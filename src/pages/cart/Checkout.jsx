@@ -28,7 +28,7 @@ const Checkout = () => {
 
     const params = {
       method: paymentMethod.toLowerCase(),
-      cartItems: [15], //masih contoh
+      cartItems: [16], //masih contoh
     };
 
     console.log(params);

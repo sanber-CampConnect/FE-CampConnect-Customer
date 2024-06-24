@@ -1,5 +1,12 @@
 import axios from "axios";
-import { get, post, put, patch, delete_request } from "../utils/HttpRequest";
+import {
+  get,
+  post,
+  put,
+  patch,
+  patch_no_data,
+  delete_request,
+} from "../utils/HttpRequest";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -234,6 +241,21 @@ export const getProductOrder = async (orderId) => {
     },
   });
 };
+
+export const cancelOrder = async (orderId) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+  const url = `${API_URL}/orders/${orderId}/cancel`;
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return await patch_no_data(url, config);
+};
+
 /* =================================================== Payment ========================================================== */
 
 export const submitTransactionEvidence = async (transactionId, file) => {

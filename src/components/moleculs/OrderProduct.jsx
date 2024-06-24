@@ -1,4 +1,3 @@
-import { Product1 } from "../../assets/images";
 import { numberWithCommas } from "../../utils/Helper";
 import { getDetailProduct, getMediaProduct } from "../../services/api";
 import { useState, useEffect } from "react";
@@ -47,7 +46,7 @@ const OrderProduct = ({ productItems }) => {
     };
 
     fetchImage();
-  });
+  }, [dataProductImages]);
 
   if (!productItems || productItems.length === 0) {
     return <div>Produk Tidak Ditemukan</div>;

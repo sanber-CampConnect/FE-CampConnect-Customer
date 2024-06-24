@@ -16,3 +16,20 @@ export const truncateDescription = (description, charLimit = 85) => {
   }
   return description;
 };
+
+export const formatDate = (isoDate) => {
+  const date = new Date(isoDate);
+  const options = { day: "numeric", month: "long", year: "numeric" };
+  return date.toLocaleDateString("id-ID", options);
+};
+
+export const formatTime = (isoDate) => {
+  const date = new Date(isoDate);
+  const options = {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  };
+  return date.toLocaleTimeString("id-ID", options);
+};
