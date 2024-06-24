@@ -1,16 +1,22 @@
 import { useLocation } from "react-router-dom";
 import { numberWithCommas } from "../../utils/Helper";
-import { useState, useEffect } from "react";
-import { Button, InputNumber, Spin } from "antd";
+import { useState, useEffect, useCallback } from "react";
+import { Button, InputNumber, Spin, notification } from "antd";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { PrimaryButton } from "../../components/atoms/Buttons";
 import { Footer } from "../../components/organisms/Footer";
-import { getDetailProduct, getMediaProduct } from "../../services/api";
+import {
+  getDetailProduct,
+  getMediaProduct,
+  addToCart,
+} from "../../services/api";
 import { PlaceholderProduct } from "../../assets/images";
 import { VariantSelector } from "../../components/atoms/Variant";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const DetailCatalogue = () => {
   const location = useLocation();
+  const { user } = useAuthContext();
   const { product } = location.state;
   const [rentalDuration, setRentalDuration] = useState(1);
   const [totalQuantity, setTotalQuantity] = useState(1);
@@ -48,9 +54,6 @@ const DetailCatalogue = () => {
     setLoading(true);
     getDetailProduct(product.id)
       .then((res) => {
-        console.log(res.data.data[0]);
-        setData(res.data.data[0]);
-        console.log(res.data.data);
         setData(res.data.data);
         if (res.data.data.variants && res.data.data.variants.length > 0) {
           const defaultVariant = res.data.data.variants[0];
@@ -87,10 +90,50 @@ const DetailCatalogue = () => {
     }
   };
 
-  const handleVariantSelect = (variant) => {
+  const handleVariantSelect = useCallback((variant) => {
+    console.log("Variant selected:", variant); // Log the selected variant
     setSelectedVariant(variant);
     setVariantStock(variant.stock);
-    console.log(selectedVariant);
+  }, []);
+
+  const handleAddToCart = async () => {
+    if (!selectedVariant) {
+      notification.warning({
+        message: "Gagal Memasukkan ke Keranjang!",
+        description: "Pilih salah satu variant produk",
+      });
+      return;
+    }
+
+    const params = {
+      cart_id: user.cart_id,
+      variant_id: selectedVariant.id,
+      count: totalQuantity,
+      rent_duration: rentalDuration,
+    };
+
+    console.log(params);
+    setLoading(true);
+    addToCart(params)
+      .then((res) => {
+        if (res.status === 201) {
+          notification.success({
+            message: "Berhasil Tambahkan Keranjang",
+            description: "Produk Anda berhasil masuk ke keranjang",
+          });
+        }
+      })
+      .catch((err) => {
+        notification.error({
+          message: "Gagal Menambahkan Keranjang",
+          description:
+            err.response?.data?.message ||
+            "Terjadi kesalahan saat menambahkan data",
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   if (loading || !data) {
@@ -129,9 +172,11 @@ const DetailCatalogue = () => {
               <VariantSelector
                 variants={data.variants}
                 onVariantSelect={handleVariantSelect}
+                selectedVariant={selectedVariant}
               />
               <p className="text-end xl:text-start">Stok: {variantStock}</p>
             </div>
+
             {/* Button Durasi Sewa dan Jumlah Barang */}
             <div className="hidden xl:flex xl:flex-col xl:gap-4 xl:w-full">
               <div className="hidden xl:flex xl:flex-row xl:gap-8">
@@ -221,6 +266,7 @@ const DetailCatalogue = () => {
               <PrimaryButton
                 text="Masukkan Keranjang"
                 className="hidden xl:flex xl:w-full xl:p-4 xl:text-center"
+                onClick={handleAddToCart}
               />
             </div>
           </div>
@@ -293,7 +339,7 @@ const DetailCatalogue = () => {
               <InputNumber
                 readOnly
                 min={1}
-                max={data.stock}
+                max={variantStock}
                 value={totalQuantity}
                 style={{
                   width: "40px",
@@ -317,6 +363,7 @@ const DetailCatalogue = () => {
         <PrimaryButton
           text="Masukkan Keranjang"
           className="w-full py-3 xl:hidden"
+          onClick={handleAddToCart}
         />
         <Footer />
       </div>

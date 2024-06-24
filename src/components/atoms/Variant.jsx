@@ -1,25 +1,18 @@
 import { useState } from "react";
 
-const VariantSelector = ({ variants, onVariantSelect }) => {
-  const [selectedVariant, setSelectedVariant] = useState(variants[0]);
-
-  const handleVariantChange = (variant) => {
-    setSelectedVariant(variant);
-    onVariantSelect(variant);
-  };
-
+const VariantSelector = ({ variants, selectedVariant, onVariantSelect }) => {
   return (
     <div>
       {variants.map((variant) => (
         <button
           key={variant.id}
-          onClick={() => handleVariantChange(variant)}
+          onClick={() => onVariantSelect(variant)}
           style={{
             borderRadius: "12px",
             marginRight: "8px",
             fontSize: "12px",
             border:
-              selectedVariant.id === variant.id
+              selectedVariant && selectedVariant.id === variant.id
                 ? "2px solid #064F3B"
                 : "1px solid grey",
           }}

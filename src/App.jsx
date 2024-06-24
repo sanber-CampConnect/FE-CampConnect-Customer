@@ -168,7 +168,7 @@ const AppContent = () => {
         }
       />
       <Route
-        path="/payment-code"
+        path="/payment-code/:id"
         element={
           <ProtectedRoute>
             <Suspense fallback={<PageLoading />}>

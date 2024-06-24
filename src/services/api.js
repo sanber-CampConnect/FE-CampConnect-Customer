@@ -11,8 +11,9 @@ const api = axios.create({
 export const authLogin = async (params) => {
   try {
     const response = await axios.post(`${API_URL}/auth/login`, params);
-    console.log(response);
     const token = response.data.authorization;
+    const userData = response.data.data;
+    localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("token", token);
     return response;
   } catch (error) {
@@ -146,6 +147,19 @@ export const getDetailProduct = async (id) => {
   return await get(url);
 };
 
+export const addToCart = async (params) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+  const url = `${API_URL}/cartItems`;
+  return await post(url, params, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 /* =================================================== GET MEDIA IMAGE ========================================================== */
 export const getMediaUser = (media) => {
   return `${API_URL}/assets/${media}`;
@@ -164,4 +178,73 @@ export const getMediaProduct = async (media) => {
     }
     throw error;
   }
+};
+
+/* =================================================== CART ========================================================== */
+export const getCartItems = async (cartId) => {
+  //masih salah
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+  const url = `${API_URL}/cartItems/${cartId}`;
+  return await get(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const postCheckout = async (params) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+  const url = `${API_URL}/orders`;
+  return await post(url, params, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+/* =================================================== Order ========================================================== */
+export const getMyOrders = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+  const url = `${API_URL}/orders/my`;
+  return await get(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const getProductOrder = async (orderId) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+  const url = `${API_URL}/orders/${orderId}`;
+  return await get(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+/* =================================================== Payment ========================================================== */
+
+export const submitTransactionEvidence = async (transactionId, file) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+  const url = `${API_URL}/transactions/${transactionId}/upload`;
+  return await patch(url, file, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };

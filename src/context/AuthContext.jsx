@@ -20,12 +20,14 @@ export const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
+    const user = localStorage.getItem("user");
+
+    if (token && user) {
       try {
-        const userData = JSON.parse(atob(token.split(".")[1]));
+        const userData = JSON.parse(user);
         dispatch({ type: "LOGIN", payload: userData });
       } catch (error) {
-        console.error("Error decoding token:", error);
+        console.error("Error parsing user data:", error);
       }
     }
   }, []);

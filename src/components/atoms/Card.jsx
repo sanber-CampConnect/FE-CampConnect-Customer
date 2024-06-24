@@ -121,15 +121,15 @@ const ProductCard = ({ product }) => {
   );
 };
 
-const OrderCardMobile = ({ order }) => {
-  console.log(order);
+const OrderCard = ({ order, productItems }) => {
+  // console.log(productItems);
+  // console.log(order);
+
   const navigate = useNavigate();
   const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
   // const [isReasonModalVisible, setIsReasonModalVisible] = useState(false);
   // const [selectedReason, setSelectedReason] = useState(null);
   // const [customReason, setCustomReason] = useState("");
-
-  const productItems = order.orderItems;
 
   const statusColorMap = {
     1: "orange",
@@ -163,13 +163,6 @@ const OrderCardMobile = ({ order }) => {
     ? "Sudah Dikirim"
     : "Belum Dikirim";
 
-  const transactionEvidenceStatusText =
-    order.transaction_evidence_status === null
-      ? "Sedang dicek"
-      : order.transaction_evidence_status
-      ? "Valid"
-      : "Invalid";
-
   const handleCancel = () => {
     setIsCancelModalVisible(true);
   };
@@ -190,78 +183,125 @@ const OrderCardMobile = ({ order }) => {
   return (
     <>
       <div className="flex flex-col justify-center mb-4">
-        <div className="flex justify-end">
-          {orderStatus && <Tag color={tagColor}>{tagText}</Tag>}
+        <div className="flex justify-end xl:justify-start">
+          {orderStatus && (
+            <Tag
+              color={tagColor}
+              style={{ fontSize: "14px", padding: "5px 10px" }}
+            >
+              {tagText}
+            </Tag>
+          )}
         </div>
-        <div className="">
-          <OrderProduct productItems={productItems} />
-        </div>
-        <div className="my-6 px-2">
-          <div className="flex flex-row justify-between mb-2">
-            <p className="">Jumlah Barang:</p>
-            <p className="font-semibold">{order.transaction_item_count}</p>
+        <div className="flex flex-col xl:flex-row xl:justify-between xl:items-start xl:gap-6">
+          <div className="xl:w-3/5">
+            <div className="flex flex-row my-4 p-1">
+              <p className="">Invoice:&nbsp;</p>
+              <p className="text-neutral">{order.transaction_invoice_number}</p>
+            </div>
+            <OrderProduct productItems={productItems} />
           </div>
-          <div className="flex flex-row justify-between mb-2">
-            <p className="">Total Harga:</p>
-            <p className="font-semibold">
-              Rp{numberWithCommas(order.transaction_total_price)}
-            </p>
-          </div>
-          <div className="flex flex-row justify-between mb-2">
-            <p className="">Metode Pembayaran:</p>
-            <p className="font-semibold">{transactionMethodText}</p>
-          </div>
-          {order.transaction_method === "transfer" && (
-            <>
+          <div className="flex flex-col xl:w-2/5">
+            <div className="my-6 px-2">
+              {/* <div className="flex flex-row justify-between mb-2">
+                <p className="">Invoice:</p>
+                <p className="font-semibold">
+                  {order.transaction_invoice_number}
+                </p>
+              </div> */}
               <div className="flex flex-row justify-between mb-2">
-                <p className="">Bukti Pembayaran:</p>
-                <p className="font-semibold">{transactionEvidenceText}</p>
+                <p className="">Jumlah Barang:</p>
+                <p className="font-semibold">{order.transaction_item_count}</p>
               </div>
               <div className="flex flex-row justify-between mb-2">
-                <p className="">Status Konfirmasi Bukti:</p>
-                <p className="font-semibold">{transactionEvidenceStatusText}</p>
+                <p className="">Total Harga:</p>
+                <p className="font-semibold">
+                  Rp{numberWithCommas(order.transaction_total_price)}
+                </p>
               </div>
-            </>
-          )}
+              <div className="flex flex-row justify-between mb-2">
+                <p className="">Metode Pembayaran:</p>
+                <p className="font-semibold">{transactionMethodText}</p>
+              </div>
+              {order.transaction_method === "transfer" && (
+                <>
+                  <div className="flex flex-row justify-between mb-2">
+                    <p className="">Bukti Pembayaran:</p>
+                    <p className="font-semibold">{transactionEvidenceText}</p>
+                  </div>
+                  <div className="flex flex-row justify-between mb-2">
+                    <p className="">Status Konfirmasi Bukti:</p>
+                    <p className="font-semibold">
+                      {order.transaction_status.charAt(0).toUpperCase() +
+                        order.transaction_status.slice(1)}
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
+            <div className="flex flex-row w-full gap-3 mb-4 px-1">
+              {order.status === "belum_bayar" &&
+                order.transaction_method === "transfer" && (
+                  <>
+                    <OutlineButton
+                      text="Batalkan"
+                      className="w-full"
+                      onClick={handleCancel}
+                    />
+                    {order.transaction_evidence_image == null && (
+                      <PrimaryButton
+                        text="Bayar"
+                        className="w-full"
+                        onClick={() =>
+                          navigate(`/payment-code/${order.transaction_id}`)
+                        }
+                      />
+                    )}
+                  </>
+                )}
+              {order.status === "sedang_disewa" && (
+                <>
+                  <PrimaryButton
+                    text="Hubungi Admin"
+                    className="w-full"
+                    onClick={() =>
+                      window.open(
+                        "https://api.whatsapp.com/send/?phone=6282228034763&text&type=phone_number&app_absent=0",
+                        "_blank"
+                      )
+                    }
+                  />
+                </>
+              )}
+              {(order.status === "dibatalkan" ||
+                order.status === "selesai") && (
+                <PrimaryButton
+                  text="Sewa Lagi"
+                  className="w-full"
+                  onClick={() => navigate(`/catalogue`)}
+                />
+              )}
+              {order.status === "belum_bayar" &&
+                order.transaction_method === "tunai" && (
+                  <>
+                    <OutlineButton
+                      text="Batalkan"
+                      className="w-full"
+                      onClick={handleCancel}
+                    />
+                    <PrimaryButton
+                      text="Informasi"
+                      className="w-full"
+                      onClick={() =>
+                        console.log("Tombol Informasi Pembayaran diklik")
+                      }
+                    />
+                  </>
+                )}
+            </div>
+          </div>
         </div>
-        <div className="flex flex-row w-full gap-3 mb-4 px-1">
-          {order.status === "belum_bayar" && (
-            <>
-              <OutlineButton
-                text="Batalkan"
-                className="w-full"
-                onClick={handleCancel}
-              />
-              <PrimaryButton
-                text="Bayar"
-                className="w-full"
-                onClick={() => navigate(`/payment/${order.id}`)}
-              />
-            </>
-          )}
-          {order.status === "sedang_disewa" && (
-            <>
-              <PrimaryButton
-                text="Hubungi Admin"
-                className="w-full"
-                onClick={() =>
-                  window.open(
-                    "https://api.whatsapp.com/send/?phone=6282228034763&text&type=phone_number&app_absent=0",
-                    "_blank"
-                  )
-                }
-              />
-            </>
-          )}
-          {(order.status === "dibatalkan" || order.status === "selesai") && (
-            <PrimaryButton
-              text="Sewa Lagi"
-              className="w-full"
-              onClick={() => navigate(`/catalogue`)}
-            />
-          )}
-        </div>
-        <hr className="w-full border-t-2 border-gray-100 opacity-20 mt-12 mb-6 rounded-full -z-50" />
+        <hr className="w-full border-t-2 border-gray-100 opacity-20 mt-12 xl:mt-24 mb-6 xl:mb-16 rounded-full -z-50" />
       </div>
 
       {/* Notifikasi pembatalan */}
@@ -310,4 +350,4 @@ const OrderCardMobile = ({ order }) => {
   );
 };
 
-export { PopularProduct, ReviewUser, ProductCard, OrderCardMobile };
+export { PopularProduct, ReviewUser, ProductCard, OrderCard };
