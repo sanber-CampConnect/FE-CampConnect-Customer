@@ -14,6 +14,7 @@ import { notification } from "antd";
 import PageLoading from "./components/organisms/PageLoading.jsx";
 import Page404 from "./components/organisms/Page404.jsx";
 import Checkout from "./pages/cart/Checkout.jsx";
+import PaymentCash from "./pages/payment/PaymentCash.jsx";
 
 const Login = React.lazy(() => import("./pages/auth/Login.jsx"));
 const Profile = React.lazy(() => import("./pages/profile/Profile.jsx"));
@@ -174,6 +175,18 @@ const AppContent = () => {
             <Suspense fallback={<PageLoading />}>
               <HomeLayout>
                 <PaymentCode />
+              </HomeLayout>
+            </Suspense>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/payment-cash"
+        element={
+          <ProtectedRoute>
+            <Suspense fallback={<PageLoading />}>
+              <HomeLayout>
+                <PaymentCash/>
               </HomeLayout>
             </Suspense>
           </ProtectedRoute>
