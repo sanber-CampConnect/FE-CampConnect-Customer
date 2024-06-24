@@ -121,14 +121,15 @@ const ProductCard = ({ product }) => {
   );
 };
 
-const OrderCard = ({ order }) => {
+const OrderCard = ({ order, productItems }) => {
+  // console.log(productItems);
+  // console.log(order);
+
   const navigate = useNavigate();
   const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
   // const [isReasonModalVisible, setIsReasonModalVisible] = useState(false);
   // const [selectedReason, setSelectedReason] = useState(null);
   // const [customReason, setCustomReason] = useState("");
-
-  const productItems = order.orderItems;
 
   const statusColorMap = {
     1: "orange",
@@ -192,8 +193,12 @@ const OrderCard = ({ order }) => {
             </Tag>
           )}
         </div>
-        <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center xl:gap-6">
+        <div className="flex flex-col xl:flex-row xl:justify-between xl:items-start xl:gap-6">
           <div className="xl:w-3/5">
+            <div className="flex flex-row my-4 p-1">
+              <p className="">Invoice:&nbsp;</p>
+              <p className="text-neutral">{order.transaction_invoice_number}</p>
+            </div>
             <OrderProduct productItems={productItems} />
           </div>
           <div className="flex flex-col xl:w-2/5">
@@ -276,6 +281,23 @@ const OrderCard = ({ order }) => {
                   onClick={() => navigate(`/catalogue`)}
                 />
               )}
+              {order.status === "belum_bayar" &&
+                order.transaction_method === "tunai" && (
+                  <>
+                    <OutlineButton
+                      text="Batalkan"
+                      className="w-full"
+                      onClick={handleCancel}
+                    />
+                    <PrimaryButton
+                      text="Informasi"
+                      className="w-full"
+                      onClick={() =>
+                        console.log("Tombol Informasi Pembayaran diklik")
+                      }
+                    />
+                  </>
+                )}
             </div>
           </div>
         </div>

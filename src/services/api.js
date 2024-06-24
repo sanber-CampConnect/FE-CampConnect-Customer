@@ -222,6 +222,18 @@ export const getMyOrders = async () => {
   });
 };
 
+export const getProductOrder = async (orderId) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+  const url = `${API_URL}/orders/${orderId}`;
+  return await get(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
 /* =================================================== Payment ========================================================== */
 
 export const submitTransactionEvidence = async (transactionId, file) => {

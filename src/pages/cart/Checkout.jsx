@@ -28,7 +28,7 @@ const Checkout = () => {
 
     const params = {
       method: paymentMethod.toLowerCase(),
-      cartItems: [14], //masih contoh
+      cartItems: [15], //masih contoh
     };
 
     console.log(params);
@@ -41,7 +41,11 @@ const Checkout = () => {
             description: "Produk Anda telah diproses",
           });
           if (params.method === "transfer") {
-            navigate("/payment-code");
+            notification.warning({
+              message: "Silahkan Kirim Bukti Transfer",
+              description: "Klik Bayar pada order dan kirim bukti transfer",
+            });
+            navigate(`/orders`);
           } else {
             navigate("/orders");
           }
