@@ -133,6 +133,7 @@ const Order = () => {
             key={order.id}
             order={order}
             productItems={productOrder[order.id] || []}
+            refreshOrders={getDataOrder}
           />
         ))
       ) : (

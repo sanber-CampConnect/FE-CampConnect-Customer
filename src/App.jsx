@@ -169,7 +169,7 @@ const AppContent = () => {
         }
       />
       <Route
-        path="/payment-code/:id"
+        path="/payment-code/:transactionId/:orderId"
         element={
           <ProtectedRoute>
             <Suspense fallback={<PageLoading />}>
@@ -181,12 +181,12 @@ const AppContent = () => {
         }
       />
       <Route
-        path="/payment-cash"
+        path="/payment-cash/:id"
         element={
           <ProtectedRoute>
             <Suspense fallback={<PageLoading />}>
               <HomeLayout>
-                <PaymentCash/>
+                <PaymentCash />
               </HomeLayout>
             </Suspense>
           </ProtectedRoute>

@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { PrimaryButton } from "../../components/atoms/Buttons";
 import { LogoBCA } from "../../assets/images";
-import { notification, Modal, Button } from "antd";
+import { notification, Modal, Button, Spin } from "antd";
 import { useParams } from "react-router-dom";
 import { submitTransactionEvidence } from "../../services/api";
+import { getProductOrder } from "../../services/api";
+import { formatDate, formatTime, numberWithCommas } from "../../utils/Helper";
 
 const PaymentCode = () => {
-  const { id } = useParams();
+  const { transactionId, orderId } = useParams();
   const [showATM, setShowATM] = useState(false);
   const [showMbanking, setShowMbanking] = useState(false);
   const [showIbanking, setShowIbanking] = useState(false);
@@ -14,6 +16,25 @@ const PaymentCode = () => {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [dataOrder, setDataOrder] = useState([]);
+
+  useEffect(() => {
+    getDataOrder();
+  }, []);
+
+  const getDataOrder = () => {
+    setLoading(true);
+    getProductOrder(orderId)
+      .then((res) => {
+        setDataOrder(res.data.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   const toggleTutorialATM = () => {
     setShowATM(!showATM);
@@ -63,7 +84,7 @@ const PaymentCode = () => {
     formData.append("image", file);
 
     try {
-      const response = await submitTransactionEvidence(id, formData);
+      const response = await submitTransactionEvidence(transactionId, formData);
       if (response.status === 201) {
         notification.success({
           message: "Bukti Transfer Dikirim",
@@ -95,12 +116,29 @@ const PaymentCode = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  console.log(dataOrder.payment_due);
+
   return (
     <>
       <div className="xl:align-middle xl:justify-center xl:items-center">
         <div className="flex flex-col xl:items-center">
           <div className="flex items-center justify-center">
-            <h3 className="font-medium text-lg">Payment Code</h3>
+            <h3 className="font-medium text-lg">Payment</h3>
+          </div>
+          <div className="flex flex-col gap-2 text-center mt-4">
+            <h1 className="text-md font-normal">Tenggat Pembayaran</h1>
+            <p className="text-md font-semibold text-failed">
+              {formatDate(dataOrder.payment_due)},{" "}
+              {formatTime(dataOrder.payment_due)}
+            </p>
           </div>
           <div className="flex flex-row items-center justify-center gap-2 mt-6">
             <img src={LogoBCA} alt="BCA" className="w-8 h-auto" />

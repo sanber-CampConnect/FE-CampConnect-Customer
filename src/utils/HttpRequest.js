@@ -18,6 +18,10 @@ export const patch = (url, data, config) => {
   return axiosInstance.patch(url, data, config);
 };
 
+export const patch_no_data = (url, config) => {
+  return axiosInstance.patch(url, {}, config);
+};
+
 export const delete_request = (url, config) => {
   return axiosInstance.delete(url, config);
 };

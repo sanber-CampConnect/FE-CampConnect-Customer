@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { OutlineButton, PrimaryButton, TextButton } from "./Buttons";
 import { Tag, notification, Modal, Radio, Input } from "antd";
 import { OrderProduct } from "../moleculs/OrderProduct";
+import { cancelOrder } from "../../services/api";
 
 const PopularProduct = ({ product }) => {
   const [photoProduct, setPhotoProduct] = useState(null);
@@ -121,15 +122,16 @@ const ProductCard = ({ product }) => {
   );
 };
 
-const OrderCard = ({ order, productItems }) => {
+const OrderCard = ({ order, productItems, refreshOrders }) => {
   // console.log(productItems);
   // console.log(order);
 
   const navigate = useNavigate();
   const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
-  // const [isReasonModalVisible, setIsReasonModalVisible] = useState(false);
-  // const [selectedReason, setSelectedReason] = useState(null);
-  // const [customReason, setCustomReason] = useState("");
+  const [isReasonModalVisible, setIsReasonModalVisible] = useState(false);
+  const [selectedReason, setSelectedReason] = useState(null);
+  const [customReason, setCustomReason] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const statusColorMap = {
     1: "orange",
@@ -169,16 +171,49 @@ const OrderCard = ({ order, productItems }) => {
 
   const handleCancelConfirm = () => {
     setIsCancelModalVisible(false);
-    // setIsReasonModalVisible(true);
+    setIsReasonModalVisible(true);
   };
 
-  // const handleReasonSubmit = () => {
-  //   setIsReasonModalVisible(false);
-  //   notification.success({
-  //     message: "Pesanan Dibatalkan",
-  //     description: "Pesanan Anda telah dibatalkan.",
-  //   });
-  // };
+  const handleReasonSubmit = async () => {
+    const reason = selectedReason === "reason4" ? customReason : selectedReason;
+    setLoading(true);
+    try {
+      if (!reason) {
+        notification.warning({
+          message: "Pilih salah satu alasan pembatalan order",
+        });
+        return;
+      }
+      const response = await cancelOrder(order.id);
+      if (response.status === 201) {
+        notification.success({
+          message: "Order Dibatalkan",
+          description: "Order berhasil dibatalkan",
+          placement: "topRight",
+          duration: 2,
+        });
+        refreshOrders();
+      } else {
+        notification.error({
+          message: "Gagal Membatalkan Order",
+          description: "Terjadi kesalahan saat membatalkan order.",
+          placement: "topRight",
+          duration: 2,
+        });
+      }
+    } catch (error) {
+      console.log("Error membatalkan order:", error);
+      notification.error({
+        message: "Gagal Membatalkan Order",
+        description: "Terjadi kesalahan saat membatalkan order.",
+        placement: "topRight",
+        duration: 2,
+      });
+    } finally {
+      setLoading(false);
+      setIsReasonModalVisible(false);
+    }
+  };
 
   return (
     <>
@@ -253,7 +288,9 @@ const OrderCard = ({ order, productItems }) => {
                         text="Bayar"
                         className="w-full"
                         onClick={() =>
-                          navigate(`/payment-code/${order.transaction_id}`)
+                          navigate(
+                            `/payment-code/${order.transaction_id}/${order.id}`
+                          )
                         }
                       />
                     )}
@@ -292,9 +329,7 @@ const OrderCard = ({ order, productItems }) => {
                     <PrimaryButton
                       text="Informasi"
                       className="w-full"
-                      onClick={() =>
-                        console.log("Tombol Informasi Pembayaran diklik")
-                      }
+                      onClick={() => navigate(`/payment-cash/${order.id}`)}
                     />
                   </>
                 )}
@@ -317,7 +352,7 @@ const OrderCard = ({ order, productItems }) => {
       </Modal>
 
       {/* Notifikasi alasan pembatalan */}
-      {/* <Modal
+      <Modal
         title="Alasan Pembatalan"
         open={isReasonModalVisible}
         onOk={handleReasonSubmit}
@@ -330,10 +365,27 @@ const OrderCard = ({ order, productItems }) => {
             onChange={(e) => setSelectedReason(e.target.value)}
             value={selectedReason}
           >
-            <Radio value="reason1">Alasan 1</Radio>
-            <Radio value="reason2">Alasan 2</Radio>
-            <Radio value="reason3">Alasan 3</Radio>
-            <Radio value="reason4">Alasan Lainnya</Radio>
+            <Radio
+              className="custom-radio"
+              value="Salah pilih produk atau jenis produk"
+            >
+              Saya salah memilih produk atau jenis produk
+            </Radio>
+            <Radio
+              className="custom-radio"
+              value="Ingin mengganti jumlah produk"
+            >
+              Saya ingin mengganti jumlah produk
+            </Radio>
+            <Radio
+              className="custom-radio"
+              value="Menemukan penawaran menarik lainnya"
+            >
+              Saya menemukan penawaran menarik lainnya
+            </Radio>
+            <Radio className="custom-radio" value="reason4">
+              Alasan lainnya &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </Radio>
           </Radio.Group>
           {selectedReason === "reason4" && (
             <Input.TextArea
@@ -345,7 +397,7 @@ const OrderCard = ({ order, productItems }) => {
             />
           )}
         </div>
-      </Modal> */}
+      </Modal>
     </>
   );
 };
