@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Tabs, Spin } from "antd";
 import { OrderCard } from "../../components/atoms/Card";
 import { getMyOrders, getProductOrder } from "../../services/api";
-import { all } from "axios";
 
 const Order = () => {
   const [activeTab, setActiveTab] = useState("0");
@@ -12,6 +11,7 @@ const Order = () => {
   const [data, setData] = useState([]);
   const [orderId, setOrderId] = useState([]);
   const [productOrder, setProductOrder] = useState([]);
+  // const [orderItems, setOrderItems] = useState([]);
 
   useEffect(() => {
     getDataOrder();
@@ -44,10 +44,17 @@ const Order = () => {
     setLoading(true);
     Promise.all(orderIds.map((id) => getProductOrder(id)))
       .then((results) => {
+        // console.log(results);
+        // menyimpan data order detail
+        // const allOrderItems = results.reduce((acc, res) => {
+        //   return acc.concat(res.data.data.orderItems);
+        // }, []);
+        // menyimpan data product
         const productOrderMap = results.reduce((acc, res, index) => {
           acc[orderIds[index]] = res.data.data.orderItems;
           return acc;
         }, {});
+        // setOrderItems(allOrderItems);
         setProductOrder(productOrderMap);
       })
       .catch((err) => {
@@ -98,15 +105,13 @@ const Order = () => {
     }
   };
 
-  if (loading || !data.length) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <Spin size="large" />
       </div>
     );
   }
-
-  // console.log(orderId);
 
   return (
     <>
@@ -134,6 +139,7 @@ const Order = () => {
             order={order}
             productItems={productOrder[order.id] || []}
             refreshOrders={getDataOrder}
+            // orderDetail={orderItems}
           />
         ))
       ) : (

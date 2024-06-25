@@ -2,11 +2,13 @@ import Logo from "../../assets/images/logo.png";
 import { useState, useEffect } from "react";
 import { OutlineButton } from "../atoms/Buttons";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { useLocation, Link } from "react-router-dom";
 
 const Navbar = () => {
   const { user } = useAuthContext();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
 
   const changeScrolled = () => {
     if (window.scrollY >= 50) {
@@ -27,6 +29,24 @@ const Navbar = () => {
     };
   }, []);
 
+  const isActive = (path) => {
+    if (path === "/catalogue") {
+      return location.pathname.startsWith("/catalogue")
+        ? "text-secondary"
+        : "text-primary";
+    } else if (path === "/orders") {
+      return location.pathname.startsWith("/orders") ||
+        location.pathname === "/payment"
+        ? "text-secondary"
+        : "text-primary";
+    } else if (path === "/cart") {
+      return location.pathname === "/cart" || location.pathname === "/checkout"
+        ? "text-secondary"
+        : "text-primary";
+    }
+    return location.pathname === path ? "text-secondary" : "text-primary";
+  };
+
   return (
     <>
       <nav
@@ -37,8 +57,8 @@ const Navbar = () => {
         <div className="max-w-screen-xl flex items-center justify-between mx-auto py-4 px-6">
           {/* Logo */}
           <div className="flex items-center space-x-3 rtl:space-x-reverse">
-            <a
-              href="/"
+            <Link
+              to="/"
               className="flex items-center space-x-3 rtl:space-x-reverse"
             >
               <img
@@ -46,7 +66,7 @@ const Navbar = () => {
                 className="h-8 w-auto"
                 alt="Kade Outdoor Malang"
               />
-            </a>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -80,37 +100,45 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-8">
             <ul className="flex flex-row space-x-8 font-medium rtl:space-x-reverse">
               <li>
-                <a
-                  href="/"
-                  className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
+                <Link
+                  to="/"
+                  className={`block py-2 px-3 rounded md:p-0 hover:text-secondary ${isActive(
+                    "/"
+                  )}`}
                   aria-current="page"
                 >
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/catalogue"
-                  className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
+                <Link
+                  to="/catalogue"
+                  className={`block py-2 px-3 rounded md:p-0 hover:text-secondary ${isActive(
+                    "/catalogue"
+                  )}`}
                 >
                   Katalog
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/cart"
-                  className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
+                <Link
+                  to="/cart"
+                  className={`block py-2 px-3 rounded md:p-0 hover:text-secondary ${isActive(
+                    "/cart"
+                  )}`}
                 >
                   Keranjang
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/orders"
-                  className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
+                <Link
+                  to="/orders"
+                  className={`block py-2 px-3 rounded md:p-0 hover:text-secondary ${isActive(
+                    "/orders"
+                  )}`}
                 >
                   Order
-                </a>
+                </Link>
               </li>
               {/* <li>
                 <a
@@ -122,20 +150,22 @@ const Navbar = () => {
               </li> */}
               {user && (
                 <li>
-                  <a
-                    href="/profile"
-                    className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
+                  <Link
+                    to="/profile"
+                    className={`block py-2 px-3 rounded md:p-0 hover:text-secondary ${isActive(
+                      "/profile"
+                    )}`}
                   >
                     Profil
-                  </a>
+                  </Link>
                 </li>
               )}
             </ul>
             {!user && (
               <div className="button-login">
-                <a href="/auth/login">
+                <Link to="/auth/login">
                   <OutlineButton text="Login" />
-                </a>
+                </Link>
               </div>
             )}
           </div>
@@ -146,37 +176,45 @@ const Navbar = () => {
           <div className="flex flex-col items-start w-full md:hidden p-4 z-50">
             <ul className="flex flex-col space-y-4 font-medium mb-6 z-50">
               <li>
-                <a
-                  href="/"
-                  className="block p-2 text-primary rounded hover:text-secondary"
+                <Link
+                  to="/"
+                  className={`block p-2 rounded hover:text-secondary ${isActive(
+                    "/"
+                  )}`}
                   aria-current="page"
                 >
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/catalogue"
-                  className="block p-2 text-primary rounded hover:text-secondary"
+                <Link
+                  to="/catalogue"
+                  className={`block p-2 rounded hover:text-secondary ${isActive(
+                    "/catalogue"
+                  )}`}
                 >
                   Katalog
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/cart"
-                  className="block p-2 text-primary rounded hover:text-secondary"
+                <Link
+                  to="/cart"
+                  className={`block p-2 rounded hover:text-secondary ${isActive(
+                    "/cart"
+                  )}`}
                 >
                   Keranjang
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/orders"
-                  className="block p-2 text-primary rounded hover:text-secondary"
+                <Link
+                  to="/orders"
+                  className={`block p-2 rounded hover:text-secondary ${isActive(
+                    "/orders"
+                  )}`}
                 >
                   Order
-                </a>
+                </Link>
               </li>
               {/* <li>
                 <a
@@ -188,20 +226,22 @@ const Navbar = () => {
               </li> */}
               {user && (
                 <li>
-                  <a
-                    href="/profile"
-                    className="block py-2 px-3 text-primary rounded md:p-0 hover:text-secondary"
+                  <Link
+                    to="/profile"
+                    className={`block py-2 px-3 rounded md:p-0 hover:text-secondary ${isActive(
+                      "/profile"
+                    )}`}
                   >
                     Profil
-                  </a>
+                  </Link>
                 </li>
               )}
             </ul>
             {!user && (
               <div className="button-login">
-                <a href="/auth/login">
+                <Link to="/auth/login">
                   <OutlineButton text="Login" className="border-secondary" />
-                </a>
+                </Link>
               </div>
             )}
           </div>

@@ -1,12 +1,18 @@
-import { numberWithCommas, truncateDescription } from "../../utils/Helper";
+import {
+  formatDate,
+  formatTime,
+  numberWithCommas,
+  truncateDescription,
+} from "../../utils/Helper";
 import { useNavigate } from "react-router-dom";
 import { PlaceholderProduct } from "../../assets/images/index";
 import { getMediaProduct } from "../../services/api";
 import { useEffect, useState } from "react";
 import { OutlineButton, PrimaryButton, TextButton } from "./Buttons";
-import { Tag, notification, Modal, Radio, Input } from "antd";
+import { Tag, notification, Modal, Radio, Input, Tooltip } from "antd";
 import { OrderProduct } from "../moleculs/OrderProduct";
 import { cancelOrder } from "../../services/api";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 
 const PopularProduct = ({ product }) => {
   const [photoProduct, setPhotoProduct] = useState(null);
@@ -125,6 +131,7 @@ const ProductCard = ({ product }) => {
 const OrderCard = ({ order, productItems, refreshOrders }) => {
   // console.log(productItems);
   // console.log(order);
+  // console.log(orderDetail);
 
   const navigate = useNavigate();
   const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
@@ -132,6 +139,9 @@ const OrderCard = ({ order, productItems, refreshOrders }) => {
   const [selectedReason, setSelectedReason] = useState(null);
   const [customReason, setCustomReason] = useState("");
   const [loading, setLoading] = useState(true);
+  const currentTime = new Date();
+  const paymentDueTime = new Date(order.payment_due);
+  const timeDifference = (paymentDueTime - currentTime) / (1000 * 60 * 60);
 
   const statusColorMap = {
     1: "orange",
@@ -258,6 +268,30 @@ const OrderCard = ({ order, productItems, refreshOrders }) => {
                 <p className="">Metode Pembayaran:</p>
                 <p className="font-semibold">{transactionMethodText}</p>
               </div>
+              {order.transaction_status !== "disetujui" ||
+              order.status !== "sedang_disewa" ? (
+                <div className="flex flex-row justify-between mb-2">
+                  <p className="">Tenggat Pembayaran:</p>
+                  <div className="flex flex-row gap-2">
+                    {timeDifference <= 3 && timeDifference >= 0 && (
+                      <Tooltip title="Tenggat pembayaran semakin dekat. Segera lakukan pembayaran.">
+                        <ExclamationCircleOutlined
+                          style={{
+                            fontSize: "18px",
+                            color: "red",
+                            marginLeft: "10px",
+                          }}
+                        />
+                      </Tooltip>
+                    )}
+                    <p className="font-semibold">
+                      {formatDate(order.payment_due)},{" "}
+                      {formatTime(order.payment_due)}
+                    </p>
+                  </div>
+                </div>
+              ) : null}
+
               {order.transaction_method === "transfer" && (
                 <>
                   <div className="flex flex-row justify-between mb-2">

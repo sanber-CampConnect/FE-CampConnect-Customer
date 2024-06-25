@@ -16,6 +16,7 @@ import {
   heroSectionDesktop,
   heroSectionMobile,
 } from "../../assets/images";
+import { useNavigate } from "react-router-dom";
 
 const reviews = [
   {
@@ -92,6 +93,7 @@ const PrevArrow = ({ onClick }) => {
 };
 
 const Home = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -162,6 +164,10 @@ const Home = () => {
     ],
   };
 
+  const handleButtonSelengkapnya = () => {
+    navigate(`/catalogue`);
+  };
+
   return (
     <>
       <div className="flex justify-center items-center flex-col">
@@ -179,12 +185,19 @@ const Home = () => {
               </p>
               <div className="flex gap-5">
                 <PrimaryButton
-                  text="Cara Pemesanan"
+                  text="Pesan Sekarang"
                   className="mt-10 w-60 h-14  hidden xl:block"
+                  onClick={handleButtonSelengkapnya}
                 />
                 <OutlineButton
                   text="Hubungi Admin"
                   className="mt-10 w-60 h-14 border-secondary hidden xl:block"
+                  onClick={() =>
+                    window.open(
+                      "https://api.whatsapp.com/send/?phone=6282228034763&text&type=phone_number&app_absent=0",
+                      "_blank"
+                    )
+                  }
                 />
               </div>
             </div>
@@ -211,6 +224,12 @@ const Home = () => {
           <OutlineButton
             text="Hubungi Admin"
             className="mt-4 w-60 h-14 border-secondary xl:hidden"
+            onClick={() =>
+              window.open(
+                "https://api.whatsapp.com/send/?phone=6282228034763&text&type=phone_number&app_absent=0",
+                "_blank"
+              )
+            }
           />
         </div>
         <div className="text-center pt-10">
@@ -233,7 +252,8 @@ const Home = () => {
         </div>
         <PrimaryButton
           text="Selengkapnya"
-          className="mt-16 w-full h-14  xl:w-40 xl:"
+          className="mt-16 w-full h-14  xl:w-40"
+          onClick={handleButtonSelengkapnya}
         />
         <div className="text-center pt-10 xl:pt-20 mt-16">
           <h1 className="font-bold text-secondary text-2xl">
@@ -279,6 +299,7 @@ const Home = () => {
         <PrimaryButton
           text="Selengkapnya"
           className="mt-16 w-full h-14 xl:hidden mb-12"
+          onClick={handleButtonSelengkapnya}
         />
         <div className="xl:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 hidden ">
           {limitedProducts.map((product) => (

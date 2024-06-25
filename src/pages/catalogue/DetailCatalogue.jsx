@@ -274,10 +274,10 @@ const DetailCatalogue = () => {
         <div className="w-full text-primary text-md mb-4 xl:my-12">
           <div className="flex flex-row gap-1">
             <p className="mb-1 font-semibold">Deskripsi:</p>
-            <i
+            {/* <i
               className="bi bi-chevron-down"
               style={{ fontWeight: "bold" }}
-            ></i>
+            ></i> */}
           </div>
           <hr></hr>
           <p className="text-justify leading-7 my-2 text-black">
