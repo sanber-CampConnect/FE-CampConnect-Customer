@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Upload, Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import Cropper from "react-easy-crop";
 import { getCroppedImg } from "../../utils/cropPhotoProfile";
 import { photoProfile } from "../../assets/images";
+import { getMediaUser } from "../../services/api";
 
 export const PopUpChangePicture = ({
   user,
@@ -12,9 +13,10 @@ export const PopUpChangePicture = ({
   setImage,
   onCrop,
 }) => {
+  const [photoUser, setPhotoUser] = useState(null);
   const handleUpload = (info) => {
     if (info.file.status === "done") {
-      console.log("Uploaded file:", info.file.originFileObj);
+      // console.log("Uploaded file:", info.file.originFileObj);
       const reader = new FileReader();
       reader.onload = () => {
         setImage(reader.result);
@@ -23,6 +25,13 @@ export const PopUpChangePicture = ({
       reader.readAsDataURL(info.file.originFileObj);
     }
   };
+
+  useEffect(() => {
+    if (user && user.image && user.image.trim() !== "") {
+      const imageUrl = getMediaUser(user.image);
+      setPhotoUser(imageUrl);
+    }
+  }, [user]);
 
   return (
     <Modal
@@ -36,7 +45,7 @@ export const PopUpChangePicture = ({
         <img
           src={
             user && user.image && user.image.trim() !== ""
-              ? user.image
+              ? photoUser
               : photoProfile
           }
           alt={user && user.username}
@@ -50,7 +59,7 @@ export const PopUpChangePicture = ({
           name="photo"
           showUploadList={false}
           customRequest={({ file, onSuccess }) => {
-            console.log("Custom request file:", file);
+            // console.log("Custom request file:", file);
             const reader = new FileReader();
             reader.onload = () => {
               setImage(reader.result);
@@ -78,7 +87,7 @@ export const PopUpCropPicture = ({ isOpen, onClose, image, onSave }) => {
   const handleSave = async () => {
     try {
       const croppedImageFile = await getCroppedImg(image, croppedAreaPixels);
-      console.log("Cropped image file:", croppedImageFile);
+      // console.log("Cropped image file:", croppedImageFile);
       onSave(croppedImageFile);
       onClose();
     } catch (error) {

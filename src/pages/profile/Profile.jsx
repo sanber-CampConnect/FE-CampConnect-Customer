@@ -56,7 +56,7 @@ const Profile = () => {
     setLoading(true);
     getProfile()
       .then((res) => {
-        console.log(res.data.data);
+        // console.log(res.data.data);
         setData(res.data.data[0]);
       })
       .catch((err) => {
@@ -271,10 +271,16 @@ const Profile = () => {
           <ul className="space-y-6 p-4">
             <li className="flex flex-row items-center space-x-3">
               <div className="w-6 text-center">
-                <i className="bi bi-person-fill text-md"></i>
+                <i
+                  className={`bi bi-person-fill text-md ${
+                    section === "edit" ? "text-primary" : "text-black"
+                  }`}
+                ></i>
               </div>
               <a
-                className="block text-black rounded md:p-0 cursor-pointer text-md"
+                className={`block rounded md:p-0 cursor-pointer text-md ${
+                  section === "edit" ? "text-primary" : "text-black"
+                }`}
                 aria-current="page"
                 onClick={() => editData(data)}
               >
@@ -283,10 +289,16 @@ const Profile = () => {
             </li>
             <li className="flex flex-row items-center space-x-3">
               <div className="w-6 text-center h-auto">
-                <i className="bi bi-lock-fill text-md"></i>
+                <i
+                  className={`bi bi-lock-fill text-md ${
+                    section === "change_pass" ? "text-primary" : "text-black"
+                  }`}
+                ></i>
               </div>
               <a
-                className="block text-black rounded md:p-0 cursor-pointer text-md"
+                className={`block rounded md:p-0 cursor-pointer text-md ${
+                  section === "change_pass" ? "text-primary" : "text-black"
+                }`}
                 aria-current="page"
                 onClick={() => changePass(data)}
               >
@@ -295,11 +307,11 @@ const Profile = () => {
             </li>
             <li className="flex flex-row items-center space-x-3">
               <div className="w-6 text-center">
-                <i className="bi bi-box-arrow-right text-md"></i>
+                <i className="text-failed bi bi-box-arrow-right text-md"></i>
               </div>
               <a
                 href="#"
-                className="block text-black rounded md:p-0 text-md"
+                className="block text-failed rounded md:p-0 text-md"
                 aria-current="page"
                 onClick={handleLogout}
               >
@@ -308,11 +320,11 @@ const Profile = () => {
             </li>
             <li className="flex flex-row items-center space-x-3">
               <div className="w-6 text-center">
-                <i className="bi bi-trash3-fill text-md"></i>
+                <i className="text-failed bi bi-trash3-fill text-md"></i>
               </div>
               <a
                 href="#"
-                className="block text-black rounded md:p-0 text-md"
+                className="block text-failed rounded md:p-0 text-md"
                 aria-current="page"
                 onClick={handleDeleteAccount}
               >
