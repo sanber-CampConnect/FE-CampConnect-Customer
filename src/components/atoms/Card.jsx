@@ -225,6 +225,8 @@ const OrderCard = ({ order, productItems, refreshOrders }) => {
     }
   };
 
+  console.log(order);
+
   return (
     <>
       <div className="flex flex-col justify-center mb-4">
@@ -317,7 +319,7 @@ const OrderCard = ({ order, productItems, refreshOrders }) => {
                       className="w-full"
                       onClick={handleCancel}
                     />
-                    {order.transaction_evidence_image == null && (
+                    {order.transaction_status !== "disetujui" && (
                       <PrimaryButton
                         text="Bayar"
                         className="w-full"
