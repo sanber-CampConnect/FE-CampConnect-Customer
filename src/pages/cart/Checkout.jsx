@@ -5,17 +5,18 @@ import Product from "../../assets/images/Product_6.png"; // Placeholder for prod
 import { numberWithCommas } from "../../utils/Helper";
 import iconPayment from "../../assets/icons/Vector.png";
 import { postCheckout } from "../../services/api";
-import { useNavigate } from "react-router-dom";
-
-// Import custom payment method icons
+import { useNavigate, useLocation } from "react-router-dom";
 
 const { Option } = Select;
 
 const Checkout = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState("Tunai");
+
+  // console.log(location.state.cartData);
 
   const handleCheckout = async () => {
     if (!cartItems) {
@@ -28,7 +29,7 @@ const Checkout = () => {
 
     const params = {
       method: paymentMethod.toLowerCase(),
-      cartItems: [16], //masih contoh
+      cartItems: [16],
     };
 
     console.log(params);

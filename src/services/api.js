@@ -189,13 +189,25 @@ export const getMediaProduct = async (media) => {
 
 /* =================================================== CART ========================================================== */
 export const getCartItems = async (cartId) => {
-  //masih salah
   const token = localStorage.getItem("token");
   if (!token) {
     throw new Error("No token found");
   }
-  const url = `${API_URL}/cartItems/${cartId}`;
+  const url = `${API_URL}/carts/${cartId}`;
   return await get(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const deleteCartItems = async (cartItemsId) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+  const url = `${API_URL}/cartItems/${cartItemsId}`;
+  return await delete_request(url, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
