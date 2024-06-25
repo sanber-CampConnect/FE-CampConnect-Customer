@@ -1,20 +1,14 @@
 import { useState, useEffect } from "react";
 import { Button, InputNumber, message, Select, notification } from "antd";
-import { MinusOutlined, PlusOutlined, CheckOutlined } from "@ant-design/icons";
+import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { BsTrash } from "react-icons/bs";
 import { numberWithCommas } from "../../utils/Helper";
 import { PrimaryButton } from "../../components/atoms/Buttons";
 import Product from "../../assets/images/Product_6.png";
-import { getCartItems } from "../../services/api";
+import { getCartItems, getMediaProduct, deleteCartItems, postCheckout } from "../../services/api";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { data } from "autoprefixer";
-import {
-  getMediaProduct,
-  deleteCartItems,
-  postCheckout,
-} from "../../services/api";
 import { PlaceholderProduct } from "../../assets/images";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import iconPayment from "../../assets/icons/Vector.png";
 
 const { Option } = Select;
@@ -66,69 +60,9 @@ const Cart = () => {
       });
   };
 
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      nama: "Tenda Ekl Choandoeg Kap. 12 P",
-      kategori: "Tenda",
-      harga: 100000,
-      durasiSewa: 3,
-      jumlahBarang: 1,
-      gambar: Product,
-    },
-    {
-      id: 2,
-      nama: "Tenda Ekl Choandoeg Kap. 12 P",
-      kategori: "Tenda",
-      harga: 100000,
-      durasiSewa: 3,
-      jumlahBarang: 1,
-      gambar: Product,
-    },
-    {
-      id: 3,
-      nama: "Tenda Ekl Choandoeg Kap. 12 P",
-      kategori: "Tenda",
-      harga: 100000,
-      durasiSewa: 3,
-      jumlahBarang: 1,
-      gambar: Product,
-    },
-  ]);
-
-  // const incrementDurasiSewa = (index) => {
-  //   const updatedItems = [...cartItems];
-  //   if (updatedItems[index].durasiSewa < 7) {
-  //     updatedItems[index].durasiSewa += 1;
-  //     setCartItems(updatedItems);
-  //   }
-  // };
-
-  // const decrementDurasiSewa = (index) => {
-  //   const updatedItems = [...dataCart];
-  //   if (updatedItems[index].durasiSewa > 1) {
-  //     updatedItems[index].durasiSewa -= 1;
-  //     setDataCart(updatedItems);
-  //   }
-  // };
-
-  // const incrementJumlahBarang = (index) => {
-  //   const updatedItems = [...cartItems];
-  //   updatedItems[index].jumlahBarang += 1;
-  //   setCartItems(updatedItems);
-  // };
-
-  // const decrementJumlahBarang = (index) => {
-  //   const updatedItems = [...dataCart];
-  //   if (updatedItems[index].jumlahBarang > 1) {
-  //     updatedItems[index].jumlahBarang -= 1;
-  //     setDataCart(updatedItems);
-  //   }
-  // };
-
   const hapusItem = (index) => {
-    const updatedItems = cartItems.filter((_, i) => i !== index);
-    setCartItems(updatedItems);
+    const updatedItems = dataCart.filter((_, i) => i !== index);
+    setDataCart(updatedItems);
   };
 
   const handleDeleteProduct = async (cartItemId) => {
@@ -140,18 +74,6 @@ const Cart = () => {
       console.error(`Error menghapus item dengan ID ${cartItemId}:`, error);
     }
   };
-
-  // const totalBarang = cartItems.reduce(
-  //   (sum, item) => sum + item.jumlahBarang,
-  //   0
-  // );
-
-  // const subtotal = cartItems.reduce(
-  //   (sum, item) => sum + item.harga * item.jumlahBarang,
-  //   0
-  // );
-
-  // const biayaPengiriman = 0; // Asumsikan gratis pengiriman
 
   const handleChecklistClick = (productId) => {
     if (checkedItems.includes(productId)) {
@@ -166,7 +88,7 @@ const Cart = () => {
   };
 
   const handleCheckout = async () => {
-    if (!cartItems) {
+    if (!dataCart) {
       notification.warning({
         message: "Gagal Checkout!",
         description: "Pilih produk untuk checkout",
@@ -179,7 +101,6 @@ const Cart = () => {
       cartItems: checkedItems,
     };
 
-    console.log(params);
     setLoading(true);
     postCheckout(params)
       .then((res) => {
@@ -202,8 +123,7 @@ const Cart = () => {
       .catch((err) => {
         notification.error({
           message: "Gagal Melakukan Checkout",
-          description:
-            err?.response?.data?.info || "Terjadi kesalahan saat checkout",
+          description: err?.response?.data?.info || "Terjadi kesalahan saat checkout",
         });
       })
       .finally(() => {
@@ -211,7 +131,8 @@ const Cart = () => {
       });
   };
 
-  console.log(dataCart);
+  const totalBarang = dataCart.reduce((sum, item) => sum + parseInt(item.count), 0);
+  const subtotal = dataCart.reduce((sum, item) => sum + parseInt(item.product_price) * parseInt(item.count), 0);
 
   return (
     <>
@@ -219,7 +140,6 @@ const Cart = () => {
       <div className="flex flex-col items-center justify-center xl:min-h-screen bg-white xl:hidden">
         <div className="w-full max-w-xl mx-auto">
           <h1 className="text-md font-medium mb-6">Shopping Cart</h1>
-          {/* <h1 className="text-md font-bold mb-6">Kade Outdoor Malang</h1> */}
           {dataCart.length === 0 ? (
             <p className="text-neutral py-44 text-center">
               Belum ada produk ditambahkan
@@ -273,7 +193,7 @@ const Cart = () => {
                     <BsTrash />
                   </Button>
                   <input
-                    style={{ height: "18px", width: "18px" }}
+                    style={{ height: "18px", width: "18px", marginTop: "10px" }}  // Added margin-top
                     type="checkbox"
                     onChange={() => handleChecklistClick(item.id)}
                   />
@@ -321,171 +241,116 @@ const Cart = () => {
 
       {/* Desktop */}
       <div className="hidden xl:flex xl:flex-col xl:container xl:mx-auto xl:p-4">
-        <h1 className="text-2xl font-bold mb-6">Keranjang</h1>
+        <h1 className="text-2xl font-bold mb-6">Shopping Cart</h1>
         <div className="flex flex-col xl:flex-row xl:justify-between">
           <div className="w-full xl:w-3/4">
             <div className="bg-white shadow-md rounded-lg overflow-hidden">
-              <table className="min-w-full bg-white">
+              <table className="min-w-full bg-white ml-4">
                 <thead>
                   <tr>
-                    <th className="py-2 px-4 pl-96">Varian</th>
-                    <th className="py-2 px-4">QTY</th>
-                    <th className="py-2 px-4">Days</th>
-                    <th className="py-2 px-4">Total Price</th>
-                    <th className="py-2 px-4"></th>
+                    <th className="py-2">Product</th>
+                    <th className="py-2 ">Varian</th>
+                    <th className="py-2 ">QTY</th>
+                    <th className="py-2 ">Days</th>
+                    <th className="py-2 ">Total Price</th>
+                    <th className="py-2 "></th>
                   </tr>
                 </thead>
                 <tbody>
-                  {dataCart.length === 0 ? (
-                    <tr>
-                      <td
-                        colSpan="5"
-                        className="text-center py-28 text-neutral"
-                      >
-                        Belum ada produk ditambahkan
+                  {dataCart.map((item, index) => (
+                    <tr key={item.id} className="border-t ">
+                      <td className="py-2 px-4 flex items-center ">
+                        <img
+                          src={photoProduct[index]}
+                          alt={item.product_name}
+                          className="w-16 h-16 rounded mr-2"
+                        />
+                        <span className="font-semibold " style={{ marginLeft: "10px" }}>
+                          {item.product_name}
+                        </span>
+                      </td>
+                      <td className="py-2  ">{item.variant_name}</td>
+                      <td className="py-2 px-4 ">
+                        <InputNumber
+                          min={1}
+                          value={parseInt(item.count)}
+                          onChange={(value) => updateQuantity(index, value)}
+                        />
+                      </td>
+                      <td className="py-2 px-4 ">{item.rent_duration} days</td>
+                      <td className="py-2 px-4">
+                        Rp {numberWithCommas(item.product_price)}
+                      </td>
+                      <td className="py-2 px-4 text-center ">
+                        <Button
+                          style={{
+                            marginLeft: "auto",
+                            marginTop: "auto",
+                            padding: "0 2px 0 2px",
+                            height: "24px",
+                            lineHeight: "24px",
+                            borderRadius: "3px",
+                            color: "#FF432A",
+                            borderColor: "#636363",
+                            
+                          }}
+                          onClick={() => handleDeleteProduct(item.id)}
+                        >
+                          <BsTrash />
+                        </Button>
+                        <input
+                          style={{ height: "18px", width: "18px", marginLeft: "16px", marginTop: "10px" }} 
+                          type="checkbox"
+                          onChange={() => handleChecklistClick(item.id)}
+                        />
                       </td>
                     </tr>
-                  ) : (
-                    dataCart.map((item, index) => (
-                      <tr key={item.id} className="text-center">
-                        <td className="py-2 px-4 flex items-center mt-2">
-                          <img
-                            src={photoProduct}
-                            alt={item.product_name}
-                            className="w-20 h-20 rounded mr-4"
-                          />
-                          <span>{item.product_name}</span>
-                        </td>
-                        {/* <td className="py-2 px-4">
-                          <div className="flex justify-center items-center">
-                            <Button
-                              style={{
-                                padding: "0 4px",
-                                height: "24px",
-                                lineHeight: "24px",
-                                borderRadius: "0",
-                              }}
-                              onClick={() => decrementJumlahBarang(index)}
-                            >
-                              <MinusOutlined />
-                            </Button>
-                            <InputNumber
-                              readOnly
-                              min={1}
-                              value={item.jumlahBarang}
-                              size="small"
-                              style={{
-                                width: "30px",
-                                border: "none",
-                                textAlign: "center",
-                                backgroundColor: "transparent",
-                              }}
-                            />
-                            <Button
-                              style={{
-                                padding: "0 4px",
-                                height: "24px",
-                                lineHeight: "24px",
-                                borderRadius: "0",
-                              }}
-                              onClick={() => incrementJumlahBarang(index)}
-                            >
-                              <PlusOutlined />
-                            </Button>
-                          </div>
-                        </td> */}
-                        {/* <td className="py-2 px-4">
-                          <div className="flex justify-center items-center">
-                            <Button
-                              style={{
-                                padding: "0 4px",
-                                height: "24px",
-                                lineHeight: "24px",
-                                borderRadius: "0",
-                              }}
-                              onClick={() => decrementDurasiSewa(index)}
-                            >
-                              <MinusOutlined />
-                            </Button>
-                            <InputNumber
-                              readOnly
-                              min={1}
-                              max={7}
-                              value={item.durasiSewa}
-                              size="small"
-                              style={{
-                                width: "30px",
-                                border: "none",
-                                textAlign: "center",
-                                backgroundColor: "transparent",
-                              }}
-                            />
-                            <Button
-                              style={{
-                                padding: "0 4px",
-                                height: "24px",
-                                lineHeight: "24px",
-                                borderRadius: "0",
-                              }}
-                              onClick={() => incrementDurasiSewa(index)}
-                            >
-                              <PlusOutlined />
-                            </Button>
-                          </div>
-                        </td> */}
-                        <td className="py-2 px-4">
-                          Rp
-                          {numberWithCommas(
-                            parseInt(item.harga) * parseInt(item.jumlahBarang)
-                          )}
-                        </td>
-                        <td className="py-2 px-4">
-                          <Button
-                            onClick={() => hapusItem(index)}
-                            style={{
-                              padding: "0",
-                              height: "24px",
-                              lineHeight: "24px",
-                              borderRadius: "0",
-                              color: "#FF432A",
-                            }}
-                          >
-                            <BsTrash />
-                          </Button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
+                  ))}
                 </tbody>
               </table>
             </div>
           </div>
-
-          {dataCart.length === 0 ? null : (
-            <>
-              <div className="w-full xl:w-1/4 mt-4 xl:mt-0 ml-10">
-                <div className="bg-white shadow-md rounded-lg p-4">
-                  <h2 className="text-lg font-bold mb-4">Ringkasan Belanja</h2>
-                  <div className="flex justify-between">
-                    <p>Total Barang:</p>
-                    <p className="font-bold">ini total barang</p>
-                  </div>
-                  <div className="flex justify-between">
-                    <p>Subtotal:</p>
-                    <p className="font-bold">ini subtotal</p>
-                  </div>
-                  <hr className="my-4 border-t-2 border-black" />
-                  <div className="flex justify-between font-bold">
-                    <p>Total Harga:</p>
-                    <p>ini total harga</p>
-                  </div>
-                  <a href="/checkout">
-                    <PrimaryButton text="Checkout" className="w-full mt-10" />
-                  </a>
-                </div>
+          <div className="w-full xl:w-1/4 mt-6 xl:mt-0 xl:ml-4">
+            <div className="bg-gray-100 p-4 rounded-lg mb-6 outline outline-2 outline-[#E9EAEB]">
+              <div className="flex items-center mb-2">
+                <p className="font-bold">Metode Pembayaran</p>
               </div>
-            </>
-          )}
+              <Select
+                defaultValue={paymentMethod}
+                onChange={handlePaymentMethodChange}
+                className="w-full"
+              >
+                <Option value="Tunai">
+                  <div className="flex items-center">
+                    <img
+                      src={iconPayment}
+                      alt="Tunai"
+                      className="w-4 h-4 mr-2"
+                    />
+                    Tunai
+                  </div>
+                </Option>
+                <Option value="Transfer">
+                  <div className="flex items-center">
+                    <img
+                      src={iconPayment}
+                      alt="Transfer"
+                      className="w-4 h-4 mr-2"
+                    />
+                    Transfer
+                  </div>
+                </Option>
+              </Select>
+              <p className="mt-2">Pembayaran yang dipilih: {paymentMethod}</p>
+            </div>
+            {checkedItems.length > 0 && (
+              <PrimaryButton
+                text="Checkout"
+                className="w-full my-4"
+                onClick={handleCheckout}
+              />
+            )}
+          </div>
         </div>
       </div>
     </>
