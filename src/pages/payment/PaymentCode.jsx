@@ -124,7 +124,7 @@ const PaymentCode = () => {
     );
   }
 
-  console.log(dataOrder.payment_due);
+  console.log(dataOrder);
 
   return (
     <>
@@ -133,12 +133,20 @@ const PaymentCode = () => {
           <div className="flex items-center justify-center">
             <h3 className="font-medium text-lg">Payment</h3>
           </div>
-          <div className="flex flex-col gap-2 text-center mt-4">
-            <h1 className="text-md font-normal">Tenggat Pembayaran</h1>
-            <p className="text-md font-semibold text-failed">
-              {formatDate(dataOrder.payment_due)},{" "}
-              {formatTime(dataOrder.payment_due)}
-            </p>
+          <div className="flex xl:flex-row flex-col xl:gap-12 gap-2">
+            <div className="flex flex-col gap-2 text-center mt-4">
+              <h1 className="text-md font-normal">Tenggat Pembayaran</h1>
+              <p className="text-md font-semibold text-failed">
+                {formatDate(dataOrder.payment_due)},{" "}
+                {formatTime(dataOrder.payment_due)}
+              </p>
+            </div>
+            <div className="flex flex-col gap-2 text-center mt-4">
+              <h1 className="text-md font-normal">Total Pembayaran</h1>
+              <p className="text-md font-semibold text-primary">
+                Rp {numberWithCommas(dataOrder.transaction_total_price)}
+              </p>
+            </div>
           </div>
           <div className="flex flex-row items-center justify-center gap-2 mt-6">
             <img src={LogoBCA} alt="BCA" className="w-8 h-auto" />

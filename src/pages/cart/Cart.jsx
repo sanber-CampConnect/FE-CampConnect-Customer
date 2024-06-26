@@ -15,6 +15,8 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 import { PlaceholderProduct } from "../../assets/images";
 import { useNavigate } from "react-router-dom";
 import iconPayment from "../../assets/icons/Vector.png";
+import { OrderCard } from "../../components/atoms/Card";
+import { data } from "autoprefixer";
 
 const { Option } = Select;
 
@@ -105,6 +107,7 @@ const Cart = () => {
       method: paymentMethod.toLowerCase(),
       cartItems: checkedItems,
     };
+    console.log(params);
 
     setLoading(true);
     postCheckout(params)
@@ -145,6 +148,8 @@ const Cart = () => {
     (sum, item) => sum + parseInt(item.product_price) * parseInt(item.count),
     0
   );
+
+  // console.log(dataCart);
 
   return (
     <>
@@ -257,14 +262,15 @@ const Cart = () => {
         <div className="flex flex-col xl:flex-row xl:justify-between">
           <div className="w-full xl:w-3/4">
             <div className="bg-white shadow-md rounded-lg overflow-hidden">
-              <table className="min-w-full bg-white ml-4">
+              <table className="min-w-full bg-white">
                 <thead>
                   <tr>
                     <th className="py-2">Product</th>
                     <th className="py-2 ">Varian</th>
-                    <th className="py-2 ">QTY</th>
-                    <th className="py-2 ">Days</th>
-                    <th className="py-2 ">Total Price</th>
+                    <th className="py-2 ">Jumlah</th>
+                    <th className="py-2 ">Durasi Sewa</th>
+                    <th className="py-2 ">Total Harga</th>
+                    <th className="py-2 ">Action</th>
                     <th className="py-2 "></th>
                   </tr>
                 </thead>
@@ -302,11 +308,12 @@ const Cart = () => {
                           onChange={(value) => updateQuantity(index, value)}
                         />
                       </td> */}
+                        <td className="py-2 px-4 ">{item.count} buah</td>
                         <td className="py-2 px-4 ">
-                          {item.rent_duration} days
+                          {item.rent_duration} hari
                         </td>
                         <td className="py-2 px-4">
-                          Rp {numberWithCommas(item.product_price)}
+                          Rp {numberWithCommas(item.subtotal)}
                         </td>
                         <td className="py-2 px-4 text-center ">
                           <Button
