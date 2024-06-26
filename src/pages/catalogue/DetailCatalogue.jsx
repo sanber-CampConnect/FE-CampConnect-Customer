@@ -105,6 +105,14 @@ const DetailCatalogue = () => {
       return;
     }
 
+    if (variantStock === 0) {
+      notification.error({
+        message: "Gagal Menambahkan Keranjang",
+        description: "Produk yang dipilih tidak tersedia",
+      });
+      return;
+    }
+
     const params = {
       cart_id: user.cart_id,
       variant_id: selectedVariant.id,
