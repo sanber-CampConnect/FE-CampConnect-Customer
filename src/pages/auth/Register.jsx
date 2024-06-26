@@ -189,7 +189,7 @@ const Register = () => {
                 type="text"
                 id="name"
                 name="name"
-                value={formData.name}
+                value={formData.username}
                 onChange={handleChange}
                 required
                 className="w-full pl-10 pr-3 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
