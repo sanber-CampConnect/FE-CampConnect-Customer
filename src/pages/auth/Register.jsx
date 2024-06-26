@@ -13,6 +13,7 @@ const Register = () => {
   const [formData, setFormData] = useState({
     email: "",
     name: "",
+    fullname: "",
     password: "",
     confirm_password: "",
   });
@@ -66,6 +67,7 @@ const Register = () => {
 
     const dataToSubmit = {
       email: formData.email,
+      fullname: formData.fullname,
       name: formData.name,
       password: formData.password,
     };
@@ -116,14 +118,14 @@ const Register = () => {
         <div className="font-poppins text-left mt-6 xl:-ml-10">
           <h1 className="text-xl font-semibold">Register</h1>
           <p className="font-medium text-base font-poppins xl:hidden">
-            Lorem ipsum is simply
+            Silahkan isi data diri di bawah ini
           </p>
           <p className="font-medium text-base mt-3 hidden xl:block">
-            If you already have an account
+            Jika Anda sudah memiliki akun
             <br />
-            You can{" "}
+            Anda dapat{" "}
             <Link to="/auth/login" className="text-failed hover:underline">
-              Login here!
+              Masuk Disini!
             </Link>
           </p>
         </div>
@@ -149,7 +151,28 @@ const Register = () => {
                 onChange={handleChange}
                 required
                 className="w-full pl-10 pr-3 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
-                placeholder="Enter your email address"
+                placeholder="Masukkan alamat email"
+              />
+            </div>
+          </div>
+          <div className="relative">
+            <label
+              htmlFor="fullname"
+              className="block text-sm font-medium text-black"
+            >
+              Nama Lengkap
+            </label>
+            <div className="flex items-center mt-1">
+              <FaRegUser className="absolute left-3 w-4 h-4 text-black" />
+              <input
+                type="text"
+                id="fullname"
+                name="fullname"
+                value={formData.fullname}
+                onChange={handleChange}
+                required
+                className="w-full pl-10 pr-3 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
+                placeholder="Masukkan nama lengkap"
               />
             </div>
           </div>
@@ -158,7 +181,7 @@ const Register = () => {
               htmlFor="name"
               className="block text-sm font-medium text-black"
             >
-              Username
+              Nama Akun
             </label>
             <div className="flex items-center mt-1">
               <FaRegUser className="absolute left-3 w-4 h-4 text-black" />
@@ -170,7 +193,7 @@ const Register = () => {
                 onChange={handleChange}
                 required
                 className="w-full pl-10 pr-3 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
-                placeholder="Enter your username"
+                placeholder="Masukkan nama akun"
               />
             </div>
           </div>
@@ -179,7 +202,7 @@ const Register = () => {
               htmlFor="password"
               className="block text-sm font-medium text-black"
             >
-              Password
+              Kata Sandi
             </label>
             <div className="flex items-center mt-1 relative">
               <img
@@ -195,7 +218,7 @@ const Register = () => {
                 onChange={handleChange}
                 required
                 className="w-full pl-10 pr-10 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
-                placeholder="Enter your password"
+                placeholder="Masukkan kata sandi"
               />
               <div
                 className="absolute right-3 cursor-pointer"
@@ -217,7 +240,7 @@ const Register = () => {
               htmlFor="confirm_password"
               className="block text-sm font-medium text-black"
             >
-              Confirm Password
+              Konfirmasi Kata Sandi
             </label>
             <div className="flex items-center mt-1 relative">
               <img
@@ -233,7 +256,7 @@ const Register = () => {
                 onChange={handleChange}
                 required
                 className="w-full pl-10 pr-10 py-2 border-b-2 border-black rounded-none focus:outline-none focus:border-[#FF432A]"
-                placeholder="Confirm your password"
+                placeholder="Masukkan konfirmasi kata sandi"
               />
               <div
                 className="absolute right-3 cursor-pointer"
@@ -259,9 +282,9 @@ const Register = () => {
             </button>
           </div>
           <p className="mt-4 text-center text-sm text-black xl:hidden">
-            If you already have an account{" "}
+            Jika Anda sudah memiliki akun,{" "}
             <Link to="/auth/login" className="text-[#2D5BFF] hover:underline">
-              Login here!
+              Masuk Disini!
             </Link>
           </p>
         </form>

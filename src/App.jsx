@@ -237,11 +237,13 @@ const AppContent = () => {
       <Route
         path="/cart"
         element={
-          <Suspense fallback={<PageLoading />}>
-            <HomeLayout>
-              <Cart />
-            </HomeLayout>
-          </Suspense>
+          <ProtectedRoute>
+            <Suspense fallback={<PageLoading />}>
+              <HomeLayout>
+                <Cart />
+              </HomeLayout>
+            </Suspense>
+          </ProtectedRoute>
         }
       />
       <Route

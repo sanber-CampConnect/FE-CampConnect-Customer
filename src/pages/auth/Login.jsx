@@ -88,11 +88,11 @@ const Login = () => {
             Lorem ipsum is simply
           </p>
           <p className="font-medium text-base mt-3 hidden xl:block">
-            If you don’t have an account register
+            Jika Anda belum mendaftarkan akun
             <br />
-            You can{" "}
+            Anda dapat{" "}
             <Link to="/auth/register" className="text-failed hover:underline">
-              Register here!
+              Daftar Disini!
             </Link>
           </p>
         </div>
@@ -192,14 +192,14 @@ const Login = () => {
             </button>
             <div className="font-poppins text-left mt-6 ml-5 xl:hidden">
               <p className="font-normal text-sm mt-3">
-                If you don’t have an account register
+                Jika Anda belum mendaftarkan akun
                 <br />
-                You can{" "}
+                Anda dapat{" "}
                 <Link
                   to="/auth/register"
                   className="text-[#2D5BFF] hover:underline"
                 >
-                  Register here!
+                  Daftar Disini!
                 </Link>
               </p>
             </div>
