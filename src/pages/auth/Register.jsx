@@ -12,7 +12,7 @@ import { notification } from "antd";
 const Register = () => {
   const [formData, setFormData] = useState({
     email: "",
-    name: "",
+    username: "",
     fullname: "",
     password: "",
     confirm_password: "",
@@ -68,7 +68,7 @@ const Register = () => {
     const dataToSubmit = {
       email: formData.email,
       fullname: formData.fullname,
-      name: formData.name,
+      username: formData.username,
       password: formData.password,
     };
 
@@ -178,7 +178,7 @@ const Register = () => {
           </div>
           <div className="relative">
             <label
-              htmlFor="name"
+              htmlFor="username"
               className="block text-sm font-medium text-black"
             >
               Nama Akun
@@ -187,8 +187,8 @@ const Register = () => {
               <FaRegUser className="absolute left-3 w-4 h-4 text-black" />
               <input
                 type="text"
-                id="name"
-                name="name"
+                id="username"
+                name="username"
                 value={formData.username}
                 onChange={handleChange}
                 required
