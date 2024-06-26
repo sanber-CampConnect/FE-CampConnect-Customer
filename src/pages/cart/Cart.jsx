@@ -5,7 +5,12 @@ import { BsTrash } from "react-icons/bs";
 import { numberWithCommas } from "../../utils/Helper";
 import { PrimaryButton } from "../../components/atoms/Buttons";
 import Product from "../../assets/images/Product_6.png";
-import { getCartItems, getMediaProduct, deleteCartItems, postCheckout } from "../../services/api";
+import {
+  getCartItems,
+  getMediaProduct,
+  deleteCartItems,
+  postCheckout,
+} from "../../services/api";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { PlaceholderProduct } from "../../assets/images";
 import { useNavigate } from "react-router-dom";
@@ -123,7 +128,8 @@ const Cart = () => {
       .catch((err) => {
         notification.error({
           message: "Gagal Melakukan Checkout",
-          description: err?.response?.data?.info || "Terjadi kesalahan saat checkout",
+          description:
+            err?.response?.data?.info || "Terjadi kesalahan saat checkout",
         });
       })
       .finally(() => {
@@ -131,8 +137,14 @@ const Cart = () => {
       });
   };
 
-  const totalBarang = dataCart.reduce((sum, item) => sum + parseInt(item.count), 0);
-  const subtotal = dataCart.reduce((sum, item) => sum + parseInt(item.product_price) * parseInt(item.count), 0);
+  const totalBarang = dataCart.reduce(
+    (sum, item) => sum + parseInt(item.count),
+    0
+  );
+  const subtotal = dataCart.reduce(
+    (sum, item) => sum + parseInt(item.product_price) * parseInt(item.count),
+    0
+  );
 
   return (
     <>
@@ -193,7 +205,7 @@ const Cart = () => {
                     <BsTrash />
                   </Button>
                   <input
-                    style={{ height: "18px", width: "18px", marginTop: "10px" }}  // Added margin-top
+                    style={{ height: "18px", width: "18px", marginTop: "10px" }} // Added margin-top
                     type="checkbox"
                     onChange={() => handleChecklistClick(item.id)}
                   />
@@ -257,55 +269,75 @@ const Cart = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {dataCart.map((item, index) => (
-                    <tr key={item.id} className="border-t ">
-                      <td className="py-2 px-4 flex items-center ">
-                        <img
-                          src={photoProduct[index]}
-                          alt={item.product_name}
-                          className="w-16 h-16 rounded mr-2"
-                        />
-                        <span className="font-semibold " style={{ marginLeft: "10px" }}>
-                          {item.product_name}
-                        </span>
+                  {dataCart.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan="5"
+                        className="text-center py-28 text-neutral"
+                      >
+                        Belum ada produk ditambahkan
                       </td>
-                      <td className="py-2  ">{item.variant_name}</td>
-                      <td className="py-2 px-4 ">
+                    </tr>
+                  ) : (
+                    dataCart.map((item, index) => (
+                      <tr key={item.id} className="border-t ">
+                        <td className="py-2 px-4 flex items-center ">
+                          <img
+                            src={photoProduct[index]}
+                            alt={item.product_name}
+                            className="w-16 h-16 rounded mr-2"
+                          />
+                          <span
+                            className="font-semibold "
+                            style={{ marginLeft: "10px" }}
+                          >
+                            {item.product_name}
+                          </span>
+                        </td>
+                        <td className="py-2  ">{item.variant_name}</td>
+                        {/* <td className="py-2 px-4 ">
                         <InputNumber
                           min={1}
                           value={parseInt(item.count)}
                           onChange={(value) => updateQuantity(index, value)}
                         />
-                      </td>
-                      <td className="py-2 px-4 ">{item.rent_duration} days</td>
-                      <td className="py-2 px-4">
-                        Rp {numberWithCommas(item.product_price)}
-                      </td>
-                      <td className="py-2 px-4 text-center ">
-                        <Button
-                          style={{
-                            marginLeft: "auto",
-                            marginTop: "auto",
-                            padding: "0 2px 0 2px",
-                            height: "24px",
-                            lineHeight: "24px",
-                            borderRadius: "3px",
-                            color: "#FF432A",
-                            borderColor: "#636363",
-                            
-                          }}
-                          onClick={() => handleDeleteProduct(item.id)}
-                        >
-                          <BsTrash />
-                        </Button>
-                        <input
-                          style={{ height: "18px", width: "18px", marginLeft: "16px", marginTop: "10px" }} 
-                          type="checkbox"
-                          onChange={() => handleChecklistClick(item.id)}
-                        />
-                      </td>
-                    </tr>
-                  ))}
+                      </td> */}
+                        <td className="py-2 px-4 ">
+                          {item.rent_duration} days
+                        </td>
+                        <td className="py-2 px-4">
+                          Rp {numberWithCommas(item.product_price)}
+                        </td>
+                        <td className="py-2 px-4 text-center ">
+                          <Button
+                            style={{
+                              marginLeft: "auto",
+                              marginTop: "auto",
+                              padding: "0 2px 0 2px",
+                              height: "24px",
+                              lineHeight: "24px",
+                              borderRadius: "3px",
+                              color: "#FF432A",
+                              borderColor: "#636363",
+                            }}
+                            onClick={() => handleDeleteProduct(item.id)}
+                          >
+                            <BsTrash />
+                          </Button>
+                          <input
+                            style={{
+                              height: "18px",
+                              width: "18px",
+                              marginLeft: "16px",
+                              marginTop: "10px",
+                            }}
+                            type="checkbox"
+                            onChange={() => handleChecklistClick(item.id)}
+                          />
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

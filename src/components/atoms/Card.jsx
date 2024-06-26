@@ -225,8 +225,6 @@ const OrderCard = ({ order, productItems, refreshOrders }) => {
     }
   };
 
-  console.log(order);
-
   return (
     <>
       <div className="flex flex-col justify-center mb-4">

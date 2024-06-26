@@ -62,8 +62,6 @@ const OrderProduct = ({ productItems }) => {
     );
   }
 
-  console.log(dataProductImages);
-
   return (
     <>
       <div className="bg-white shadow-lg flex flex-col mt-4 p-4 rounded-lg w-full gap-6">
